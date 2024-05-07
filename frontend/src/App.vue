@@ -1,11 +1,12 @@
 <template>
-  <div class="w-full h-full bg-gray-700 p-5">
+  <div class="w-full bg-gray-700 p-5" :class="token ? 'h_full' : 'h-screen'">
     <LoginForm v-if="!token" :show-form="showFormLog" @close="closeFormLog"/>
-    <Header v-if="token" @login="showLog" @register="showReg"/>
-    <!-- <RegisterForm :show-form="showFormReg" @close="closeFormReg" /> -->
-    <PostList />
-    <Footer />
-    
+    <div v-if="token">
+      <Header v-if="token" @login="showLog" @register="showReg"/>
+      <RegisterForm :show-form="showFormReg" @close="closeFormReg" />
+      <PostList />
+      <Footer />
+    </div>
   </div>
 </template>
 
@@ -27,25 +28,15 @@
   const usersStore = useUsersStore();
   const postsStore = usePostsStore();
 
-  // const cookies = document.cookie;
-  // const cookiesArray = cookies.split('; ');
-
-  // cookiesArray.forEach(cookie => {
-  //   const [name, value] = cookie.split('=');
-  //   if (name.trim() === 'Mycookie') {
-  //       console.log('Mycookie:', decodeURIComponent(value));
-  //   }
-  // })
-
-  const token = document.cookie.split('=')[1];
-  console.log(token);
-  
-  const dataStringFromLocalStorage = localStorage.getItem('user');
-  const dataFromLocalStorage = JSON.parse(dataStringFromLocalStorage);
-  const username = dataFromLocalStorage.username
-  const posterId = dataFromLocalStorage.posterId
- 
-  jwtStore.setJwt(token, username, posterId)
+  let token
+  if (document.cookie !=''){
+    token = document.cookie.split('=')[1];
+    const dataStringFromLocalStorage = localStorage.getItem('user');
+    const dataFromLocalStorage = JSON.parse(dataStringFromLocalStorage);
+    const username = dataFromLocalStorage.username
+    const posterId = dataFromLocalStorage.posterId
+    jwtStore.setJwt(token, username, posterId)
+  } 
   postsStore.setPosts();
   usersStore.setUsers();
 

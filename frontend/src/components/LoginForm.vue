@@ -89,6 +89,8 @@ const login = async () => {
       localStorage.setItem('user', dataString);
       jwtStore.setJwt(token, username, posterId);
       responseAxios = res
+      window.location.reload();
+
     })
   .catch(error => {
   console.error('Erreur lors de la connexion de l\'utilisateur :' , error.res.data);
