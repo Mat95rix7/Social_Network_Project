@@ -31,8 +31,9 @@ export const useJwtStore = defineStore("jwt", {
         })
         .then((res) => {
           this.jwt = null;
-          localStorage.setItem('username','')
-          this.username = "Brother"
+          this.username = "Brother";
+          localStorage.setItem('username','');
+          document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
           return true
         })
         .catch((e) => {

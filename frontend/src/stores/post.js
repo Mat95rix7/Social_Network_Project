@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import axios from 'axios'
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 export const usePostsStore = defineStore("posts", {
   state: () => ({
@@ -8,7 +8,7 @@ export const usePostsStore = defineStore("posts", {
   }),
 
   actions: {
-    async setPosts(jwt) {
+    async setPosts() {
       await axios(
         {
           method: "GET",

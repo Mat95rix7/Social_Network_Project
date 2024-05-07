@@ -19,7 +19,7 @@
     import { useJwtStore } from "../stores/jwt";
     const jwtStore = useJwtStore();
     const token = document.cookie.split('=')[1]
-    const username = localStorage.getItem("username");
+    const username = localStorage.getItem('username');
     console.log(username)
 
     // const usersStore = useUsersStore();

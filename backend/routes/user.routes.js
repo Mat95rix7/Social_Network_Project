@@ -14,7 +14,7 @@ router.post('/login', userAuthCtrl.login)
 router.get('/logout', userAuthCtrl.logout)
 
 
-router.get('/', auth, userCtrl.getAllUsers)
+router.get('/', userCtrl.getAllUsers)
 router.get('/:id', auth, userCtrl.userInfo)
 router.delete('/:id', auth, userCtrl.deleteUser)
 router.put('/:id', auth, userCtrl.updateUser)

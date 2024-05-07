@@ -39,8 +39,8 @@
   console.log(token);
  
   jwtStore.setJwt(token)
-  postsStore.setPosts(token);
-  usersStore.setUsers(token);
+  postsStore.setPosts();
+  usersStore.setUsers();
 
   
   const showFormLog = ref(true);

@@ -1,6 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import axios  from 'axios'
-axios.defaults.withCredentials = true;
+// axios.defaults.withCredentials = true;
 
 export const useUsersStore = defineStore("users", {
   state: () => ({
