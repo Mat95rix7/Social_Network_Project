@@ -38,12 +38,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
-import axios  from 'axios'
-
 import { useJwtStore } from "../stores/jwt";
 import { useUsersStore } from "../stores/user";
 import { usePostsStore } from "../stores/post";
+
+import { ref } from "vue";
+import axios  from 'axios'
+
 const jwtStore = useJwtStore();
 const usersStore = useUsersStore();
 const postsStore = usePostsStore();
@@ -83,16 +84,20 @@ const login = async () => {
       const token = res.data.user.token;
       const username = res.data.user.username;
       const posterId = res.data.user._id;
-      localStorage.setItem('username', username);
+      const data = {'username': username, 'posterId': posterId};
+      const dataString = JSON.stringify(data);
+      localStorage.setItem('user', dataString);
       jwtStore.setJwt(token, username, posterId);
       responseAxios = res
     })
   .catch(error => {
-    console.error('Erreur lors de la connexion de l\'utilisateur :' ,error.response);
+  console.error('Erreur lors de la connexion de l\'utilisateur :' , error.res.data);
   })
   console.log(responseAxios.status)
-  alert("Votre connexion est réussie");
-  // navigateTo("/");
+  if (responseAxios.status == 200){
+    alert("Votre connexion est réussie");
+    // navigateTo("/");
+  }
   emit("close");
 };
 

@@ -20,7 +20,7 @@
                       @click="openEditPopup()"
                       v-if="post.posterId == jwtStore.posterId"
                       title="Edit the post">edit</span>
-                <span class="material-symbols-outlined 
+                      <span class="material-symbols-outlined 
                       cursor-pointer text-green-500"
                       @click="deletePost(post._id)"
                       v-if="post.posterId == jwtStore.posterId"
@@ -34,13 +34,14 @@
   </div>
 </template>
 <script setup>
-  import { ref, defineEmits } from 'vue';
-  import CreatePost from "./CreatePost.vue";
-  import ModifyPost from "./ModifyPost.vue"
-
+  // import { ref, defineEmits } from 'vue';
   import { useJwtStore } from "../stores/jwt";
   import { useUsersStore } from "../stores/user";
   import { usePostsStore } from "../stores/post";
+  
+  import CreatePost from "./CreatePost.vue";
+  import ModifyPost from "./ModifyPost.vue"
+
   
   const jwtStore = useJwtStore();
   const postsStore = usePostsStore();
@@ -61,28 +62,28 @@
       if (res !== "ok") {
         alert(res);
       }
-      // window.location.reload();
+      window.location.reload();
       return;
 }  
 
 
 
 
-const props = defineProps(['myPost']);
-const isEditPopupOpen = ref(false);
-const { emit } = defineEmits(['updatePost', 'closeEditPopup']);
+// const props = defineProps(['myPost']);
+// const isEditPopupOpen = ref(false);
+// const { emit } = defineEmits(['updatePost', 'closeEditPopup']);
 
-const openEditPopup = () => {
-  isEditPopupOpen.value = true;
-};
+// const openEditPopup = () => {
+//   isEditPopupOpen.value = true;
+// };
 
-const closeEditPopup = () => {
-  isEditPopupOpen.value = false;
-};
+// const closeEditPopup = () => {
+//   isEditPopupOpen.value = false;
+// };
 
-const updatePost = (newPost) => {
-  console.log('Nouvelles valeurs du post :', newPost);
-};
+// const updatePost = (newPost) => {
+//   console.log('Nouvelles valeurs du post :', newPost);
+// };
 
 </script>
 

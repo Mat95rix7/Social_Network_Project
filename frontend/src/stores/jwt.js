@@ -1,5 +1,6 @@
 import { defineStore, storeToRefs } from "pinia";
 import axios from 'axios'
+axios.defaults.withCredentials = true;
 
 export const useJwtStore = defineStore("jwt", {
   state: () => ({

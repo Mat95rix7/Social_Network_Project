@@ -9,14 +9,15 @@
   
   
   <script setup>
-  import { ref } from 'vue'
+  
   import { useJwtStore } from "../stores/jwt";
   import { usePostsStore } from '../stores/post';
+  import { ref } from 'vue'
+  
   const jwtStore = useJwtStore();
   const postStore = usePostsStore();
 
   
-  const posterId = ref("");
   const message = ref("");
   const error = ref("");
   
@@ -35,7 +36,7 @@
         message.value
       );
       message.value = ''
-      // window.location.reload();
+      window.location.reload();
       
 
       

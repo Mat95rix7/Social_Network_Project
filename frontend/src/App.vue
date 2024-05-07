@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-screen bg-gray-700 p-5">
+  <div class="w-full h-full bg-gray-700 p-5">
     <LoginForm v-if="!token" :show-form="showFormLog" @close="closeFormLog"/>
     <Header v-if="token" @login="showLog" @register="showReg"/>
     <!-- <RegisterForm :show-form="showFormReg" @close="closeFormReg" /> -->
@@ -10,6 +10,10 @@
 </template>
 
 <script setup>
+  import { useUsersStore } from "./stores/user";
+  import { usePostsStore } from "./stores/post";
+  import { useJwtStore } from "./stores/jwt";
+
   import { ref } from 'vue'
   import Header from './components/Header.vue'
   import Footer from './components/Footer.vue'
@@ -17,9 +21,7 @@
   import LoginForm from './components/LoginForm.vue'
   import RegisterForm from './components/RegisterForm.vue'
 
-  import { useUsersStore } from "./stores/user";
-  import { usePostsStore } from "./stores/post";
-  import { useJwtStore } from "./stores/jwt";
+
   
   const jwtStore = useJwtStore();
   const usersStore = useUsersStore();
@@ -37,8 +39,13 @@
 
   const token = document.cookie.split('=')[1];
   console.log(token);
+  
+  const dataStringFromLocalStorage = localStorage.getItem('user');
+  const dataFromLocalStorage = JSON.parse(dataStringFromLocalStorage);
+  const username = dataFromLocalStorage.username
+  const posterId = dataFromLocalStorage.posterId
  
-  jwtStore.setJwt(token)
+  jwtStore.setJwt(token, username, posterId)
   postsStore.setPosts();
   usersStore.setUsers();
 

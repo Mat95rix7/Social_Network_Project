@@ -32,7 +32,5 @@ exports.login = async (req, res, next) => {
 
 exports.logout = (req, res, next) => {
     res.cookie('MyCookie','', {maxAge: 1})
-    // res.clearCookie('MyCookie')
-    // res.end()
     res.send('Déconnection réussie')
 }

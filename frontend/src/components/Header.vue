@@ -15,15 +15,14 @@
     </div>
 </template>
 <script setup>
-    import { useUsersStore } from "../stores/user";
     import { useJwtStore } from "../stores/jwt";
     const jwtStore = useJwtStore();
+
     const token = document.cookie.split('=')[1]
-    const username = localStorage.getItem('username');
-    console.log(username)
-
-    // const usersStore = useUsersStore();
-
+    const dataStringFromLocalStorage = localStorage.getItem('user');
+    const dataFromLocalStorage = JSON.parse(dataStringFromLocalStorage);
+    const username = dataFromLocalStorage.username
+    const posterId = dataFromLocalStorage.posterId
     
   
 
