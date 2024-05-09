@@ -6,7 +6,7 @@
     <transition name="pop">
       <form v-if="showForm" @submit.prevent="register">
         <button type="button">
-          <span class="material-symbols-outlined" @click="closeFormReg(), $emit('close')">
+          <span class="material-symbols-outlined" @click="$emit('close')">
             Close
           </span>
         </button>
@@ -127,7 +127,7 @@ const register =  async () => {
       }
   });
 
-  if (axiosResponse === 200) {
+  if (axiosResponse === 201) {
     alert("Votre inscription est réussie");
     // await navigateTo("/");
     emit("close");

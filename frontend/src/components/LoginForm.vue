@@ -29,8 +29,8 @@
         </div>
         <input type="submit" value="Connexion" />
         <p class="text-white">Vous n'avez pas de compte ? 
-          <span class="text-green-500 cursor-pointer"  v-if="!showRegisterForm" @click="showRegForm()">Inscrivez-vous</span>
-          <RegisterForm :show-form="showRegisterForm" v-if="showRegisterForm" @close="showRegisterForm()"/>
+          <span class="text-green-500 cursor-pointer"  v-if="!showRegisterForm" @click="showFormReg()">Inscrivez-vous</span>
+          <RegisterForm :show-form="showRegisterForm"  @close="showFormReg"/>
         </p>
         <span class="error" v-if="error !== ''">{{ error }}</span>
       </form>
@@ -58,6 +58,7 @@ const email = ref("");
 const password = ref("");
 const error = ref("");
 const emit = defineEmits(["close"]);
+
 const showRegisterForm = ref(false);
 
 defineProps({
@@ -67,11 +68,10 @@ defineProps({
   }
 });
 
-const showRegForm = () =>{
-  showRegisterForm.value = !showRegisterForm.value
-}
 
-const closeRegForm = () =>{
+
+const showFormReg = () =>{
+  showRegisterForm.value = !showRegisterForm.value
   showForm.value = false
 }
 
