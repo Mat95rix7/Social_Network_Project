@@ -6,7 +6,7 @@
     <transition name="pop">
       <form v-if="showForm" @submit.prevent="register">
         <button type="button">
-          <span class="material-symbols-outlined" @click="$emit('close')">
+          <span class="material-symbols-outlined" @click="closeFormReg(), $emit('close')">
             Close
           </span>
         </button>
@@ -43,6 +43,16 @@
             @keyup="handleChange"
           />
         </div>
+        <div class="form-group">
+          <label for="password">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            placeholder="Votre mot de passe"
+            v-model="confirmPassword"
+            @keyup="handleChange"
+          />
+        </div>
         <input type="submit" value="Inscription" />
         <span class="error" v-if="error !== ''">{{ error }}</span>
       </form>
@@ -52,12 +62,16 @@
 
 <script setup>
 import { ref } from "vue";
+import axios from 'axios';
 
 const username = ref("");
 const email = ref("");
 const password = ref("");
+const confirmPassword = ref("");
 const error = ref("");
 const emit = defineEmits(["close"]);
+
+let axiosResponse
 
 defineProps({
   showForm: {
@@ -66,39 +80,56 @@ defineProps({
   },
 });
 
+const closeFormReg = () => {
+  showForm.value = false;
+};
+
 
 const register =  async () => {
-  
-    if (username.value.length === 0 || email.value.length === 0 || password.value.length === 0) {
+  if (username.value.length === 0 || 
+      email.value.length === 0 || 
+      password.value.length === 0 ||
+      confirmPassword.value.length === 0) {
       error.value = "Veuillez remplir tous les champs";
       return;
-    }
-  
+    }  
+  if (password.value !== confirmPassword.value){
+    error.value = "Les mots de passes doivent être identiques";
+    return;
+  }
   const data = {
         username: username.value,
         email: email.value,
         password: password.value,
       }
-  const res = await fetch(`${import.meta.env.VITE_APP_API_URL}user/signup`, {
-            method: "POST",
-            headers: {
+  await axios(
+    {
+      method: "POST",
+      url : `${import.meta.env.VITE_APP_API_URL}user/signup`,
+      headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify(data),
-            
-            })
+      data
+    }
+  )
            
-    .then((r) => r.json())
-    .then(data => {console.log('Succès :', data)})
-    .catch((e) => {
-      error.value = e.message;
-      console.log(e.message);
-    });
-    console.log(res)
-  if (res.status === 200) {
-    // jwtStore.setJwt(res.body.token);
+  .then((r) => axiosResponse = r.status)
+  .catch((er) => {
+    axiosResponse = er.response.status
+    if(er.response.data.password != '' ){
+        error.value = er.response.data.password
+      } else {
+          if (er.response.data.username != ''){
+            error.value = er.response.data.username
+          } else {
+            error.value = er.response.data.email
+        }
+      }
+  });
+
+  if (axiosResponse === 200) {
     alert("Votre inscription est réussie");
-    await navigateTo("/");
+    // await navigateTo("/");
     emit("close");
   }
 };

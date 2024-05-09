@@ -2,8 +2,8 @@
   <div class="w-full bg-gray-700 p-5" :class="token ? 'h_full' : 'h-screen'">
     <LoginForm v-if="!token" :show-form="showFormLog" @close="closeFormLog"/>
     <div v-if="token">
-      <Header v-if="token" @login="showLog" @register="showReg"/>
-      <RegisterForm :show-form="showFormReg" @close="closeFormReg" />
+      <Header v-if="token" />
+      <!-- <RegisterForm :show-form="showFormReg" @close="closeFormReg" /> -->
       <PostList />
       <Footer />
     </div>
@@ -55,7 +55,7 @@
   };
 
   const closeFormReg = () => {
-    showFormReg.value = false;
+    showForm.value = false;
   };
 
 </script>

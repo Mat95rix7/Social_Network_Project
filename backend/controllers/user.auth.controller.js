@@ -1,7 +1,9 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const { registerErrors, loginErrors } = require('../utils/errors')
 require('dotenv').config({path:'../config/'})
+
 
 const maxAge = 2 * 3600000
 
@@ -13,7 +15,8 @@ module.exports.signUp = async (req, res) => {
       res.status(201).json({ user: user._id})
     }
     catch(err) {
-      res.status(200).send(err)
+      const errors = registerErrors(err);
+      res.status(400).send(errors)
     }
   }
   
@@ -26,7 +29,8 @@ exports.login = async (req, res, next) => {
         res.cookie('MyCookie', token, { maxAge: maxAge })
         res.status(200).json({ user, token })
     } catch (err) {
-        res.status(400).json(err)
+      const errors = loginErrors(err);
+        res.status(400).json(errors)
     }
 }
 

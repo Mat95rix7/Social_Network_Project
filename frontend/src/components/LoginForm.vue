@@ -29,12 +29,16 @@
         </div>
         <input type="submit" value="Connexion" />
         <p class="text-white">Vous n'avez pas de compte ? 
-          <span class="text-green-500 cursor-pointer"  @click="$emit('register')">Inscrivez-vous</span></p>
+          <span class="text-green-500 cursor-pointer"  v-if="!showRegisterForm" @click="showRegForm()">Inscrivez-vous</span>
+          <RegisterForm :show-form="showRegisterForm" v-if="showRegisterForm" @close="showRegisterForm()"/>
+        </p>
         <span class="error" v-if="error !== ''">{{ error }}</span>
-        
       </form>
+      
     </transition>
+    
   </div>
+  
 </template>
 
 <script setup>
@@ -44,6 +48,7 @@ import { usePostsStore } from "../stores/post";
 
 import { ref } from "vue";
 import axios  from 'axios'
+import RegisterForm from "./RegisterForm.vue";
 
 const jwtStore = useJwtStore();
 const usersStore = useUsersStore();
@@ -52,7 +57,8 @@ const postsStore = usePostsStore();
 const email = ref("");
 const password = ref("");
 const error = ref("");
-const emit = defineEmits(["close"],["register"]);
+const emit = defineEmits(["close"]);
+const showRegisterForm = ref(false);
 
 defineProps({
   showForm: {
@@ -60,6 +66,15 @@ defineProps({
     default: false,
   }
 });
+
+const showRegForm = () =>{
+  showRegisterForm.value = !showRegisterForm.value
+}
+
+const closeRegForm = () =>{
+  showForm.value = false
+}
+
 let responseAxios;
 const login = async () => {
   
@@ -92,8 +107,14 @@ const login = async () => {
       window.location.reload();
 
     })
-  .catch(error => {
-  console.error('Erreur lors de la connexion de l\'utilisateur :' , error.res.data);
+  .catch(er => {
+      if(er.response.data.email != '' ){
+        error.value = er.response.data.email
+        console.log(error.value)
+      } else {
+        error.value = er.response.data.password
+        console.log(error.value)
+      }
   })
   console.log(responseAxios.status)
   if (responseAxios.status == 200){
