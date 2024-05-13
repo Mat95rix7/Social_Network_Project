@@ -8,26 +8,18 @@
       </form>
     </div>
   </template>
-  
-  
+    
   <script setup>
-  import { usePostsStore } from '../stores/post'
-  import { useJwtStore } from '../stores/jwt'
+  import { usePostsStore } from '@/stores/post'
   import { ref } from 'vue'
- 
-  const jwtStore = useJwtStore()
-  const postsStore = usePostsStore()
 
+  const postsStore = usePostsStore()
+  const props = defineProps(["posterId"])
   const message = ref('');
   
   const createPost = async () => {
-      const res = await postsStore.createPost(
-        jwtStore.jwt,
-        jwtStore.Id,
-        message.value
-      )
+      const res = await postsStore.createPost(props.posterId, message.value)
       message.value = '';
-      // window.location.reload();
     }
   </script>
   

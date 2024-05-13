@@ -21,9 +21,7 @@
       import { ref, toRefs, defineEmits } from 'vue';
 
       const props = toRefs(props);
-      const editedPost = ref({
-        content: props.myPost.message
-      });
+      const editedPost = ref({ content: props.myPost.message });
 
       const { emit } = defineEmits(['edit', 'close']);
 

@@ -28,7 +28,7 @@ export const usePostsStore = defineStore("posts", {
       return true;
     },
 
-    async createPost(jwt, posterId, message) {
+    async createPost(posterId, message) {
       const r = await axios(
             {
               method: "POST",
@@ -76,7 +76,7 @@ export const usePostsStore = defineStore("posts", {
     //   return "ok";
     // },
 
-    async deletePost(jwt, id) {
+    async deletePost(id) {
       const conf = confirm("Voulez-vous vraiment supprimer cette post ?");
       if (!conf) {
         return;
@@ -84,7 +84,7 @@ export const usePostsStore = defineStore("posts", {
       await axios(
         {
           method: "DELETE",
-          url : `${import.meta.env.VITE_APP_API_URL}post/l` + id,
+          url : `${import.meta.env.VITE_APP_API_URL}post/` + id,
           headers: {
                 "Content-Type": "application/json",
               },
