@@ -24,6 +24,18 @@ exports.getPost = (req, res, next) => {
     .catch(error => res.status(400).json({error}) )
 }
 
+exports.getOnePost = (req, res, next) => {
+    Post.findOne({_id : req.params.id})
+    .then(post => {
+        if (!post) {
+            res.status(400).send("unknown ID : " + req.params.id)
+        } else {
+            res.status(200).json(post)
+        }
+    })
+    .catch(error => res.status(400).json({error}) )  
+}
+
 exports.updatePost = (req, res, next) => {
     if (!ObjectID.isValid(req.params.id))
       return res.status(400).send("ID unknown : " + req.params.id)

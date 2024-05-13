@@ -129,7 +129,6 @@ const register =  async () => {
 
   if (axiosResponse === 201) {
     alert("Votre inscription est réussie");
-    // await navigateTo("/");
     emit("close");
   }
 };

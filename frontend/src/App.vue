@@ -1,9 +1,9 @@
 <template>
   <div class="w-full bg-gray-700 p-5" :class="token ? 'h_full' : 'h-screen'">
-    <LoginForm v-if="!token" :show-form="showFormLog" @close="closeFormLog"/>
-    <div v-if="token">
-      <Header v-if="token" />
-      <!-- <RegisterForm :show-form="showFormReg" @close="closeFormReg" /> -->
+    <LoginForm v-if="!token" :show-form/>
+    <div v-else>
+      <Header />
+      <CreatePost />
       <PostList />
       <Footer />
     </div>
@@ -15,12 +15,11 @@
   import { usePostsStore } from "./stores/post";
   import { useJwtStore } from "./stores/jwt";
 
-  import { ref } from 'vue'
   import Header from './components/Header.vue'
   import Footer from './components/Footer.vue'
   import PostList from './components/PostList.vue'
   import LoginForm from './components/LoginForm.vue'
-  import RegisterForm from './components/RegisterForm.vue'
+  import CreatePost from "./components/CreatePost.vue";
 
 
   
@@ -36,28 +35,18 @@
     const username = dataFromLocalStorage.username
     const posterId = dataFromLocalStorage.posterId
     jwtStore.setJwt(token, username, posterId)
+    postsStore.setPosts();
+    usersStore.setUsers();
   } 
-  postsStore.setPosts();
-  usersStore.setUsers();
-
   
-  const showFormLog = ref(true);
-  const showFormReg = ref(false); 
-  const showLog = () => {
-    showFormLog.value = true;
-  };
-  const showReg = () => {
-    showFormReg.value = true;
-  };
+  const showForm = true 
 
-  const closeFormLog = () => {
-    showFormLog.value = false;
-  };
-
-  const closeFormReg = () => {
-    showForm.value = false;
-  };
 
 </script>
+<style>
+* {
+  font-family: roboto;
+}
+</style>
 
 
