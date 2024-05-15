@@ -1,4 +1,6 @@
 <template>
+  <CreatePost :posterId="posterId"/>
+  
   <div class="w-9/12 bg-gray-700  p-2 mx-auto">
     <div class=" bg-gray-900 rounded-lg p-2">
       <div v-for="post of postsStore.posts" :key="post._id">
@@ -10,19 +12,21 @@
             <p class="text-white text-justify p-2">{{ post.message }}</p>
             <div class="flex">
               <div class="flex w-1/2">
-                <span :key="post._id" class="
-                            material-symbols-outlined
-                            cursor-pointer text-green-500" :class="{liked : filled}"
+                <span 
+                      class="material-symbols-outlined
+                            cursor-pointer text-green-500" 
+                      :class="{liked : isLiked(post)}"
                             title="Like the post" 
-                            @click="toggleLike(post._id)" 
+                            @click="toggleLike(post)" 
                             >star</span>
-                <span :key="post._id" class="px-3 text-xl text-green-500" title="Number of like">{{ count }}</span>
+                <span :id="post._id" class="px-3 text-xl text-green-500" title="Number of like">{{ post.likers.length }}</span>
               </div>
               <div class="flex w-1/2 justify-end">
-                <span class="material-symbols-outlined 
+                <span id="post._id"
+                      class="material-symbols-outlined 
                       cursor-pointer text-green-500 px-5" 
                       v-if="post.posterId == posterId.posterId"
-                      @click="openEditPopup"
+                      @click="openEditPopup(post)"
                       title="Edit the post">edit</span>
                       <span class="material-symbols-outlined 
                       cursor-pointer text-green-500"
@@ -30,24 +34,30 @@
                       v-if="post.posterId == posterId.posterId"
                       title="Delete the post">delete</span>
               </div>
-              <ModifyPost v-if="isEditPopupOpen"/>
+              
             </div>
         </div>
       </div>
+      <ModifyPost v-if="selectedPost" @close="closeEditPopup" :post="selectedPost"/>
     </div>
   </div>
 </template>
+
 <script setup>
   import { ref } from 'vue';
   import { useUsersStore } from "@/stores/user";
   import { usePostsStore } from "@/stores/post";
   
-  import ModifyPost from "@/components/ModifyPost.vue"
+  import ModifyPost from "@/components/ModifyPost.vue"  
+import CreatePost from './CreatePost.vue';
   
   const postsStore = usePostsStore();
   const usersStore = useUsersStore();
 
   const posterId = defineProps(['posterId'])
+  const userId = posterId.posterId
+  
+  const selectedPost = ref(null)
   
   const posterName = (id) => {
     for(let user of usersStore.users){
@@ -57,77 +67,37 @@
     }
   }
 
-  async function deletePost(id) {
-      const res = await postsStore.deletePost(id);
-      if (res !== "ok") {
-        alert(res);
-      }
-      return;
+async function deletePost(id) {
+    await postsStore.deletePost(id);
+    return;
 } 
 
-  
-// const props = defineProps(['myPost']);
-const isEditPopupOpen = ref(false);
-const { emit } = defineEmits(['updatePost', 'closeEditPopup']);
-
-const openEditPopup = () => {
-  isEditPopupOpen.value = true;
-};
-
-const closeEditPopup = () => {
-  isEditPopupOpen.value = false;
-};
-
-const updatePost = (newPost) => {
- 
-};
-
-
-
-//   const { id, isLiked, countLike} = defineProps({
-//   id: Number,
-//   isLiked: Boolean,
-//   CountLike: Number
-// });
-
-  const filled = ref(false);
-  const count = ref('0');
-
-  const toggleLike = (id) => { 
-    filled.value = !filled.value;
-    count.value++
-  
-
-  
-
-    
-  
-    // async function likePost(id) {
-    //   const res = await postsStore.likePost(jwtStore.jwt, jwtStore.Id, id);
-    //   console.log(jwtStore.jwt, jwtStore.Id, id)
-    //   console.log(res)
-    //   if (res !== "ok") {
-    //     alert(res);
-    //   }
-    //   // window.location.reload();
-    //   return;
-    // }
-
-    // async function unlikePost(id) {
-    //   const res = await postsStore.likePost(jwtStore.jwt, jwtStore.Id, id);
-    //   console.log(jwtStore.jwt, jwtStore.Id, id)
-    //   console.log(res)
-    //   if (res !== "ok") {
-    //     alert(res);
-    //   }
-    //   
-    //   return;
-    // }
-
+const openEditPopup = (post) => {
+  selectedPost.value = post
 }
 
-  
+const closeEditPopup = () => {
+  selectedPost.value = false;
+};
 
+const filled = ref(false);
+
+const isLiked = (post) => {
+  return post.likers.includes(userId)
+}
+
+async function toggleLike(post){
+    if (!isLiked(post)){
+      await postsStore.likePost(userId, post._id);
+      filled.value = true
+      return;
+    } else {
+      await postsStore.unlikePost(userId, post._id);
+      filled.value = false
+      return;
+    }
+  }
+  
 </script>
 
 <style scoped>

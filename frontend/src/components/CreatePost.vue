@@ -10,16 +10,19 @@
   </template>
     
   <script setup>
-  import { usePostsStore } from '@/stores/post'
   import { ref } from 'vue'
 
+  import { usePostsStore } from '@/stores/post'
   const postsStore = usePostsStore()
+  
   const props = defineProps(["posterId"])
+  const poster = props.posterId.posterId
   const message = ref('');
   
   const createPost = async () => {
-      const res = await postsStore.createPost(props.posterId, message.value)
+      await postsStore.createPost(poster, message.value)
       message.value = '';
+      location.reload()
     }
   </script>
   

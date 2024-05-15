@@ -7,18 +7,18 @@ export const useJwtStore = defineStore("jwt", {
     jwt: storeToRefs(null),
   }),
   getters: {
-    getJwt(state) {
-      return state.username;
-    },
-    Id(state){
-      return state.posterId;
-    },
+    // getJwt(state) {
+    //   return state.username;
+    // },
+    // Id(state){
+    //   return state.posterId;
+    // },
   },
   actions: {
     setJwt(jwt, username, posterId) {
       this.jwt = jwt;
-      this.username = username;
-      this.posterId = posterId;
+      // this.username = username;
+      // this.posterId = posterId;
     },
     
     async logout() {

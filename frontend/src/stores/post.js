@@ -18,7 +18,7 @@ export const usePostsStore = defineStore("posts", {
             }
           })
         .then((res) => {
-          this.posts = res.data.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+          this.posts = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
           return true
         })
         .catch((e) => {
@@ -29,7 +29,7 @@ export const usePostsStore = defineStore("posts", {
     },
 
     async createPost(posterId, message) {
-      const r = await axios(
+      await axios(
             {
               method: "POST",
               url: `${import.meta.env.VITE_APP_API_URL}post`,
@@ -42,39 +42,35 @@ export const usePostsStore = defineStore("posts", {
               }),
             }
         )
-      .then((res) => this.posts.push(JSON.stringify(res.data)))
+      .then((res) => {
+        this.posts.push(JSON.stringify(res.data));
+        console.log("Post crée avec succès")
+      })
       .catch((e) => {
         console.log("error", e);
         return e;
       });
-  },
+    },
 
-    // async updatePost(jwt, id, message) {
-    //   const res = await axios(
-    //     `${import.meta.env.VITE_APP_API_URL}post/` + id,
-    //     {
-    //       method: "PUT",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         message,
-    //       }),
-    //     }
-    //   )
-    //     .then((r) => r.json())
-    //     .catch((e) => {
-    //       error.value = e.message;
-    //       console.log(e);
-    //     });
-
-    //   const post = this.posts.find((t) => t.id === id);
-    //   post.title = title;
-    //   post.content = content;
-    //   post.completed = completed;
-    //   post.isContentPrivate = isContentPrivate;
-    //   return "ok";
-    // },
+    async updatePost(id, message) {
+      await axios(
+        {
+          method: "PUT",
+          url : `${import.meta.env.VITE_APP_API_URL}post/` + id,
+          headers: {
+            "Content-Type": "application/json",
+            },
+          data: JSON.stringify({
+            message,
+          }),
+        }
+      )
+        .then((r) => console.log("Modification effectuée avec succès"))
+        .catch((e) => {
+          console.log(e);
+        });
+      return "ok";
+    },
 
     async deletePost(id) {
       const conf = confirm("Voulez-vous vraiment supprimer cette post ?");
@@ -99,43 +95,39 @@ export const usePostsStore = defineStore("posts", {
       return "ok";
     },
 
-  async likePost(jwt, posterId, id) { 
+  async likePost(posterId, id) { 
     await axios(
       {
         method: "PATCH",
         url: `${import.meta.env.VITE_APP_API_URL}post/like/` + id,
         headers: {
           "Content-Type": "application/json", 
-          // Authorization: "Bearer " + jwt,
         },
         data: JSON.stringify({id : posterId})     
       })
-      .then((r) => console.log(r))
+      .then((r) => console.log("le post est bien liké"))
       .catch((e) => { 
         console.log("error", e);
         return e; 
       });
-    // this.posts = this.posts.filter((p) => p.id !== id);
     return "ok";
   },
 
-  async unlikePost(jwt, posterId, id) { 
+  async unlikePost(posterId, id) { 
     await axios(
       {
         method: "PATCH",
         url: `${import.meta.env.VITE_APP_API_URL}post/unlike/` + id,
         headers: {
           "Content-Type": "application/json", 
-          // Authorization: "Bearer " + jwt,
         },
         data: JSON.stringify({id : posterId})     
       })
-      .then((r) => console.log(r))
+      .then((r) => console.log("le post est bien disliké"))
       .catch((e) => { 
         console.log("error", e);
         return e; 
       });
-    // this.posts = this.posts.filter((p) => p.id !== id);
     return "ok";
   }
 

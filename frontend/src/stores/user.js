@@ -7,6 +7,7 @@ export const useUsersStore = defineStore("users", {
     users: storeToRefs([]),
   }),
   actions: {
+    
     async setUsers() {
       await axios({
         method: "GET",
@@ -26,6 +27,46 @@ export const useUsersStore = defineStore("users", {
         });
      
       
+    },
+    async login(email, password){
+      let responseAxios
+      await axios(
+        {
+          method : 'POST',
+          url : `${import.meta.env.VITE_APP_API_URL}user/login`,
+          data : {
+            email: email.value,
+            password: password.value,
+          },
+        }
+      )
+      .then((res) => {
+          console.log('Utilisateur connecté avec succès', res);
+          const token = res.data.user.token;
+          const username = res.data.user.username;
+          const posterId = res.data.user._id;
+          const data = {'username': username, 'posterId': posterId};
+          const dataString = JSON.stringify(data);
+          localStorage.setItem('user', dataString);
+          jwtStore.setJwt(token, username, posterId);
+          responseAxios = res
+          window.location.reload();
+    
+        })
+      .catch(er => {
+          if(er.response.data.email != '' ){
+            error.value = er.response.data.email
+            console.log(error.value)
+          } else {
+            error.value = er.response.data.password
+            console.log(error.value)
+          }
+      })
+      console.log(responseAxios.status)
+      if (responseAxios.status == 200){
+        alert("Votre connexion est réussie");
+        // navigateTo("/");
+      }
     },
 
     // async addUser(jwt, name, role, password, discordId, twitchId) {

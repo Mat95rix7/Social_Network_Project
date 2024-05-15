@@ -1,9 +1,8 @@
 <template>
   <div class="w-full bg-gray-700 p-5" :class="token ? 'h_full' : 'h-screen'">
-    <LoginForm v-if="!token" :show-form="showForm"/>
+    <LoginForm v-if="!token"  :show-form="showForm"/>
     <div v-else>
       <Header :username="username"/>
-      <CreatePost :posterId="posterId"/>
       <PostList :posterId="posterId"/>
       <Footer />
     </div>
@@ -15,11 +14,11 @@
   import { usePostsStore } from "@/stores/post";
   import { useJwtStore } from "@/stores/jwt";
 
+  import LoginForm from '@/components/LoginForm.vue'
   import Header from '@/components/Header.vue'
   import Footer from '@/components/Footer.vue'
   import PostList from '@/components/PostList.vue'
-  import LoginForm from '@/components/LoginForm.vue'
-  import CreatePost from "@/components/CreatePost.vue";
+  
   
   const jwtStore = useJwtStore();
   const usersStore = useUsersStore();
@@ -36,6 +35,7 @@
     postsStore.setPosts();
     usersStore.setUsers();
   } 
+
   
   const showForm = true 
 

@@ -42,24 +42,13 @@
 </template>
 
 <script setup>
-import { useJwtStore } from "../stores/jwt";
-import { useUsersStore } from "../stores/user";
-import { usePostsStore } from "../stores/post";
-
 import { ref } from "vue";
-import axios  from 'axios'
-import RegisterForm from "./RegisterForm.vue";
+import RegisterForm from "@/components/RegisterForm.vue";
 
-const jwtStore = useJwtStore();
+import { useUsersStore } from "@/stores/user";
 const usersStore = useUsersStore();
-const postsStore = usePostsStore();
 
-const email = ref("");
-const password = ref("");
-const error = ref("");
 const emit = defineEmits(["close"]);
-
-const showRegisterForm = ref(false);
 
 defineProps({
   showForm: {
@@ -68,61 +57,26 @@ defineProps({
   }
 });
 
+const email = ref("");
+const password = ref("");
+const error = ref("");
 
+const showRegisterForm = ref(false);
 
 const showFormReg = () =>{
   showRegisterForm.value = !showRegisterForm.value
   showForm.value = false
 }
 
-let responseAxios;
 const login = async () => {
   
     if (email.value.length === 0 || password.value.length === 0) {
       error.value = "Veuillez remplir tous les champs";
       return;
     }
-  
-  await axios(
-    {
-      method : 'POST',
-      url : `${import.meta.env.VITE_APP_API_URL}user/login`,
-      data : {
-        email: email.value,
-        password: password.value,
-      },
-      withCredentials : true,
-    }
-  )
-  .then((res) => {
-      console.log('Utilisateur connecté avec succès', res);
-      const token = res.data.user.token;
-      const username = res.data.user.username;
-      const posterId = res.data.user._id;
-      const data = {'username': username, 'posterId': posterId};
-      const dataString = JSON.stringify(data);
-      localStorage.setItem('user', dataString);
-      jwtStore.setJwt(token, username, posterId);
-      responseAxios = res
-      window.location.reload();
-
-    })
-  .catch(er => {
-      if(er.response.data.email != '' ){
-        error.value = er.response.data.email
-        console.log(error.value)
-      } else {
-        error.value = er.response.data.password
-        console.log(error.value)
-      }
-  })
-  console.log(responseAxios.status)
-  if (responseAxios.status == 200){
-    alert("Votre connexion est réussie");
-    // navigateTo("/");
+    await usersStore.login(email, password)
+    emit("close")
   }
-  emit("close");
-};
 
 const handleChange = () => {
   error.value = "";
