@@ -65,7 +65,6 @@ const showRegisterForm = ref(false);
 
 const showFormReg = () =>{
   showRegisterForm.value = !showRegisterForm.value
-  showForm.value = false
 }
 
 const login = async () => {

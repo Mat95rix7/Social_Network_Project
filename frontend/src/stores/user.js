@@ -75,6 +75,26 @@ export const useUsersStore = defineStore("users", {
       return responseAxios
     },
 
+    async logout() {
+      await axios({
+        method: "GET",
+        url: `${import.meta.env.VITE_APP_API_URL}user/logout`,
+        headers: {
+          "Content-Type": "application/json",
+          }
+        })
+        .then((res) => {
+          console.log("Déconnection réussie")
+          localStorage.setItem('user','');
+          document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          window.location.reload();
+          return true
+        })
+        .catch((e) => {
+          return false;
+        });
+     },
+
 
     // async addUser(jwt, name, role, password, discordId, twitchId) {
     //   const res = await fetch(`${import.meta.env.VITE_APP_API_URL}user`, {
