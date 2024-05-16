@@ -33,15 +33,14 @@
           <RegisterForm :show-form="showRegisterForm"  @close="showFormReg"/>
         </p>
         <span class="error" v-if="error !== ''">{{ error }}</span>
-      </form>
-      
+      </form>  
     </transition>
-    
   </div>
   
 </template>
 
 <script setup>
+
 import { ref } from "vue";
 import RegisterForm from "@/components/RegisterForm.vue";
 
@@ -68,7 +67,6 @@ const showFormReg = () =>{
 }
 
 const login = async () => {
-  
     if (email.value.length === 0 || password.value.length === 0) {
       error.value = "Veuillez remplir tous les champs";
       return;
@@ -81,10 +79,8 @@ const login = async () => {
       } else {
           if(res.data.email != '' ){
             error.value = res.data.email
-            console.log(error.value)
           } else {
             error.value = res.data.password
-            console.log(error.value)
           }
         }
   }

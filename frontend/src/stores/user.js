@@ -18,11 +18,9 @@ export const useUsersStore = defineStore("users", {
         })
       .then((res) => {
         this.users = res.data;
-        return true
       })
       .catch((e) => {
         console.log("error", e);
-        return false;
       });
     },
 
@@ -81,11 +79,8 @@ export const useUsersStore = defineStore("users", {
         localStorage.setItem('user','');
         document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         // window.location.reload();
-        return true
       })
-      .catch((e) => {
-        return false;
-      });
+      .catch((e) => console.log(e));
     },
 
 

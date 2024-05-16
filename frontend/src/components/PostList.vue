@@ -1,4 +1,5 @@
 <template>
+  
   <CreatePost :posterId="posterId"/>
   
   <div class="w-9/12 bg-gray-700  p-2 mx-auto">
@@ -38,9 +39,12 @@
             </div>
         </div>
       </div>
+
       <ModifyPost v-if="selectedPost" @close="closeEditPopup" :post="selectedPost"/>
+
     </div>
   </div>
+  
 </template>
 
 <script setup>
@@ -49,7 +53,7 @@
   import { usePostsStore } from "@/stores/post";
   
   import ModifyPost from "@/components/ModifyPost.vue"  
-import CreatePost from './CreatePost.vue';
+  import CreatePost from '@/components/CreatePost.vue';
   
   const postsStore = usePostsStore();
   const usersStore = useUsersStore();
@@ -60,7 +64,7 @@ import CreatePost from './CreatePost.vue';
   const selectedPost = ref(null)
   
   const posterName = (id) => {
-    for(let user of usersStore.users){
+    for(const user of usersStore.users){
        if (user._id === id){
         return user.username
       }
@@ -86,7 +90,7 @@ import CreatePost from './CreatePost.vue';
     return post.likers.includes(userId)
   }
 
-async function toggleLike(post){
+  async function toggleLike(post){
     if (!isLiked(post)){
       await postsStore.likePost(userId, post._id);
       filled.value = true
@@ -96,6 +100,7 @@ async function toggleLike(post){
       filled.value = false
       return;
     }
+}
   
 </script>
 

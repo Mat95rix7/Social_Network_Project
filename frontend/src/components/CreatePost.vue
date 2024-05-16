@@ -22,7 +22,7 @@
   async function createPost() {
       await postsStore.createPost(poster, message.value)
       message.value = '';
-      location.reload()
+      // location.reload()
     }
   </script>
   

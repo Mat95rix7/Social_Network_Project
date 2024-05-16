@@ -19,11 +19,9 @@ export const usePostsStore = defineStore("posts", {
           })
         .then((res) => {
           this.posts = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-          return true
         })
         .catch((e) => {
           console.log("error", e);
-          return false;
         });
     },
 
@@ -44,7 +42,6 @@ export const usePostsStore = defineStore("posts", {
       .then((res) => {
         this.posts.push(res.data);
         console.log("Post crée avec succès")
-        
       })
       .catch((e) => {
         console.log("error", e);
