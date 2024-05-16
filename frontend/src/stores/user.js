@@ -50,13 +50,31 @@ export const useUsersStore = defineStore("users", {
           const userData = {'username': username, 'posterId': posterId};
           const dataString = JSON.stringify(userData);
           localStorage.setItem('user', dataString);
-          // jwtStore.setJwt(token, username, posterId);
-          // window.location.reload();
         })
       .catch(er => responseAxios = er.response)
       
       return responseAxios
     },
+
+    async register(username, email, password){
+      let responseAxios
+      await axios(
+        {
+          method : 'POST',
+          url : `${import.meta.env.VITE_APP_API_URL}user/signup`,
+          data : {
+            username: username.value,
+            email: email.value,
+            password: password.value,
+          },
+        }
+      )
+      .then((res) => responseAxios = res)
+      .catch(er => responseAxios = er.response)
+      
+      return responseAxios
+    },
+
 
     // async addUser(jwt, name, role, password, discordId, twitchId) {
     //   const res = await fetch(`${import.meta.env.VITE_APP_API_URL}user`, {

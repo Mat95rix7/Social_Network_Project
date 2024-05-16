@@ -62,7 +62,8 @@
 
 <script setup>
 import { ref } from "vue";
-import axios from 'axios';
+import { useUsersStore } from "@/stores/user";
+const usersStore = useUsersStore();
 
 const username = ref("");
 const email = ref("");
@@ -70,8 +71,6 @@ const password = ref("");
 const confirmPassword = ref("");
 const error = ref("");
 const emit = defineEmits(["close"]);
-
-let axiosResponse
 
 defineProps({
   showForm: {
@@ -97,40 +96,21 @@ const register =  async () => {
     error.value = "Les mots de passes doivent être identiques";
     return;
   }
-  const data = {
-        username: username.value,
-        email: email.value,
-        password: password.value,
-      }
-  await axios(
-    {
-      method: "POST",
-      url : `${import.meta.env.VITE_APP_API_URL}user/signup`,
-      headers: {
-              "Content-Type": "application/json",
-            },
-      data
-    }
-  )
-           
-  .then((r) => axiosResponse = r.status)
-  .catch((er) => {
-    axiosResponse = er.response.status
-    if(er.response.data.password != '' ){
-        error.value = er.response.data.password
+  const res = await usersStore.register(username, email, password)
+      if ( res.status === 201 ){
+        alert("Votre inscription est réussie");
+        emit("close");
       } else {
-          if (er.response.data.username != ''){
-            error.value = er.response.data.username
-          } else {
-            error.value = er.response.data.email
-        }
-      }
-  });
-
-  if (axiosResponse === 201) {
-    alert("Votre inscription est réussie");
-    emit("close");
-  }
+            if(res.data.password != '' ){
+              error.value = res.data.password
+            } else { 
+              if (res.data.username != ''){
+                  error.value = res.data.username
+                } else {
+                  error.value = res.data.email
+              }
+            }
+      } 
 };
 
 const handleChange = () => {
