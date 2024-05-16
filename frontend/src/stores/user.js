@@ -1,32 +1,29 @@
 import { defineStore, storeToRefs } from "pinia";
 import axios  from 'axios'
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 
 export const useUsersStore = defineStore("users", {
   state: () => ({
     users: storeToRefs([]),
   }),
   actions: {
-    
     async setUsers() {
-      await axios({
-        method: "GET",
-        url: `${import.meta.env.VITE_APP_API_URL}user`,
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: `Bearer ${jwt}`,
-          }
+      await axios(
+        {
+          method: "GET",
+          url: `${import.meta.env.VITE_APP_API_URL}user`,
+          headers: {
+            "Content-Type": "application/json",
+            }
         })
-        .then((res) => {
-          this.users = res.data;
-          return true
-        })
-        .catch((e) => {
-          console.log("error", e);
-          return false;
-        });
-     
-      
+      .then((res) => {
+        this.users = res.data;
+        return true
+      })
+      .catch((e) => {
+        console.log("error", e);
+        return false;
+      });
     },
 
     async login(email, password){
@@ -39,20 +36,17 @@ export const useUsersStore = defineStore("users", {
             email: email.value,
             password: password.value,
           },
-        }
-      )
+      })
       .then((res) => {
           console.log('Utilisateur connecté avec succès');
           responseAxios = res;
-          const token = res.data.user.token;
           const username = res.data.user.username;
           const posterId = res.data.user._id;
           const userData = {'username': username, 'posterId': posterId};
           const dataString = JSON.stringify(userData);
           localStorage.setItem('user', dataString);
-        })
+      })
       .catch(er => responseAxios = er.response)
-      
       return responseAxios
     },
 
@@ -67,33 +61,32 @@ export const useUsersStore = defineStore("users", {
             email: email.value,
             password: password.value,
           },
-        }
-      )
+        })
       .then((res) => responseAxios = res)
       .catch(er => responseAxios = er.response)
-      
       return responseAxios
     },
 
     async logout() {
-      await axios({
-        method: "GET",
-        url: `${import.meta.env.VITE_APP_API_URL}user/logout`,
-        headers: {
-          "Content-Type": "application/json",
+      await axios(
+        {
+          method: "GET",
+          url: `${import.meta.env.VITE_APP_API_URL}user/logout`,
+          headers: {
+            "Content-Type": "application/json",
           }
-        })
-        .then((res) => {
-          console.log("Déconnection réussie")
-          localStorage.setItem('user','');
-          document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-          window.location.reload();
-          return true
-        })
-        .catch((e) => {
-          return false;
-        });
-     },
+      })
+      .then((res) => {
+        console.log("Déconnection réussie")
+        localStorage.setItem('user','');
+        document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+        window.location.reload();
+        return true
+      })
+      .catch((e) => {
+        return false;
+      });
+    },
 
 
     // async addUser(jwt, name, role, password, discordId, twitchId) {

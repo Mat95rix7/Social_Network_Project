@@ -25,7 +25,6 @@ export const usePostsStore = defineStore("posts", {
           console.log("error", e);
           return false;
         });
-      return true;
     },
 
     async createPost(posterId, message) {
