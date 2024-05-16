@@ -80,7 +80,7 @@ export const useUsersStore = defineStore("users", {
         console.log("Déconnection réussie")
         localStorage.setItem('user','');
         document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        // location.reload();
+        // window.location.reload();
         return true
       })
       .catch((e) => {

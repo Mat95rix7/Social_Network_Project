@@ -19,10 +19,10 @@
   const poster = props.posterId.posterId
   const message = ref('');
   
-  const createPost = async () => {
+  async function createPost() {
       await postsStore.createPost(poster, message.value)
       message.value = '';
-      // location.reload()
+      location.reload()
     }
   </script>
   

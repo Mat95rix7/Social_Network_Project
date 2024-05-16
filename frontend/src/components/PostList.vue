@@ -60,45 +60,42 @@ import CreatePost from './CreatePost.vue';
   const selectedPost = ref(null)
   
   const posterName = (id) => {
-    for(const user of usersStore.users){
-      if (user._id === id){
+    for(let user of usersStore.users){
+       if (user._id === id){
         return user.username
       }
     }
   }
 
-async function deletePost(id) {
-    await postsStore.deletePost(id);
-    return;
-} 
+  async function deletePost(id) {
+      await postsStore.deletePost(id);
+      return;
+  } 
 
-const openEditPopup = (post) => {
-  selectedPost.value = post
-}
+  const openEditPopup = (post) => {
+    selectedPost.value = post
+  }
 
-const closeEditPopup = () => {
-  selectedPost.value = false;
-};
+  const closeEditPopup = () => {
+    selectedPost.value = false;
+  };
 
-const filled = ref(false);
+  const filled = ref(false);
 
-const isLiked = (post) => {
-  return post.likers.includes(userId)
-}
+  const isLiked = (post) => {
+    return post.likers.includes(userId)
+  }
 
 async function toggleLike(post){
     if (!isLiked(post)){
       await postsStore.likePost(userId, post._id);
       filled.value = true
-      // location.reload()
       return;
     } else {
       await postsStore.unlikePost(userId, post._id);
       filled.value = false
-      // location.reload()
       return;
     }
-  }
   
 </script>
 
