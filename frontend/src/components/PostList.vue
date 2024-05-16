@@ -3,7 +3,7 @@
   
   <div class="w-9/12 bg-gray-700  p-2 mx-auto">
     <div class=" bg-gray-900 rounded-lg p-2">
-      <div v-for="post of postsStore.posts" :key="post._id">
+      <div v-for="post in postsStore.posts" :key="post._id">
         <div class=" bg-black rounded-lg p-2 m-2 text-lg" :id="post._id">
             <div class="flex justify-between" >
                 <h2 class="text-green-500 font-bold" >{{ posterName(post.posterId) }}</h2>
@@ -25,13 +25,13 @@
                 <span id="post._id"
                       class="material-symbols-outlined 
                       cursor-pointer text-green-500 px-5" 
-                      v-if="post.posterId == posterId.posterId"
+                      v-if="(post.posterId == posterId.posterId) || (post.username = 'Mat95rix7')"
                       @click="openEditPopup(post)"
                       title="Edit the post">edit</span>
                       <span class="material-symbols-outlined 
                       cursor-pointer text-green-500"
                       @click="deletePost(post._id)"
-                      v-if="post.posterId == posterId.posterId"
+                      v-if="(post.posterId == posterId.posterId) || (post.username = 'Mat95rix7')"
                       title="Delete the post">delete</span>
               </div>
               
@@ -60,8 +60,8 @@ import CreatePost from './CreatePost.vue';
   const selectedPost = ref(null)
   
   const posterName = (id) => {
-    for(let user of usersStore.users){
-       if (user._id === id){
+    for(const user of usersStore.users){
+      if (user._id === id){
         return user.username
       }
     }
@@ -90,10 +90,12 @@ async function toggleLike(post){
     if (!isLiked(post)){
       await postsStore.likePost(userId, post._id);
       filled.value = true
+      // location.reload()
       return;
     } else {
       await postsStore.unlikePost(userId, post._id);
       filled.value = false
+      // location.reload()
       return;
     }
   }

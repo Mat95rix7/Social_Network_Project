@@ -77,7 +77,7 @@ const login = async () => {
     if ( res.status === 200 ) {
         alert("Votre connexion est réussie");
         emit('close')
-        location.reload()
+        // location.reload()
       } else {
           if(res.data.email != '' ){
             error.value = res.data.email

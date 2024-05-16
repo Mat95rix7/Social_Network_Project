@@ -39,7 +39,7 @@
         idPost.value,
         contentInput.value,
       );
-      location.reload()
+      // location.reload()
     };
 
   </script>

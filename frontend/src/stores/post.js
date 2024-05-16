@@ -1,10 +1,10 @@
-import { defineStore, storeToRefs } from "pinia";
+import { defineStore } from "pinia";
 import axios from 'axios'
 axios.defaults.withCredentials = true;
 
 export const usePostsStore = defineStore("posts", {
   state: () => ({
-    posts: storeToRefs([]),
+    posts: ([]),
   }),
 
   actions: {
@@ -36,20 +36,20 @@ export const usePostsStore = defineStore("posts", {
                 "Content-Type": "application/json",
               },
               data: JSON.stringify({
-                posterId,
-                message
-              }),
+                    posterId,
+                    message
+                  }),
             }
         )
       .then((res) => {
-        this.posts.push(JSON.stringify(res.data));
+        this.posts.push(res.data);
         console.log("Post crée avec succès")
+        
       })
       .catch((e) => {
         console.log("error", e);
         return e;
       });
-      return "ok"
   },
 
    
@@ -70,11 +70,10 @@ export const usePostsStore = defineStore("posts", {
         .catch((e) => {
           console.log(e);
         });
-      return "ok";
     },
 
     async deletePost(id) {
-      const conf = confirm("Voulez-vous vraiment supprimer cette post ?");
+      const conf = confirm("Voulez-vous vraiment supprimer ce post ?");
       if (!conf) {
         return;
       }
@@ -93,7 +92,6 @@ export const usePostsStore = defineStore("posts", {
         return e; 
       });
       this.posts = this.posts.filter(p => p._id !== id);
-      return "ok";
     },
 
   async likePost(posterId, id) { 
@@ -111,7 +109,6 @@ export const usePostsStore = defineStore("posts", {
         console.log("error", e);
         return e; 
       });
-    return "ok";
   },
 
   async unlikePost(posterId, id) { 
@@ -129,10 +126,9 @@ export const usePostsStore = defineStore("posts", {
         console.log("error", e);
         return e; 
       });
-    return "ok";
   }
 
 },
 
-  persist: true,
+  // persist: true,
 });
