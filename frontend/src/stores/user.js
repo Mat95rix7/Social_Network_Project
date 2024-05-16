@@ -28,6 +28,7 @@ export const useUsersStore = defineStore("users", {
      
       
     },
+
     async login(email, password){
       let responseAxios
       await axios(
@@ -41,32 +42,20 @@ export const useUsersStore = defineStore("users", {
         }
       )
       .then((res) => {
-          console.log('Utilisateur connecté avec succès', res);
+          console.log('Utilisateur connecté avec succès');
+          responseAxios = res;
           const token = res.data.user.token;
           const username = res.data.user.username;
           const posterId = res.data.user._id;
-          const data = {'username': username, 'posterId': posterId};
-          const dataString = JSON.stringify(data);
+          const userData = {'username': username, 'posterId': posterId};
+          const dataString = JSON.stringify(userData);
           localStorage.setItem('user', dataString);
-          jwtStore.setJwt(token, username, posterId);
-          responseAxios = res
-          window.location.reload();
-    
+          // jwtStore.setJwt(token, username, posterId);
+          // window.location.reload();
         })
-      .catch(er => {
-          if(er.response.data.email != '' ){
-            error.value = er.response.data.email
-            console.log(error.value)
-          } else {
-            error.value = er.response.data.password
-            console.log(error.value)
-          }
-      })
-      console.log(responseAxios.status)
-      if (responseAxios.status == 200){
-        alert("Votre connexion est réussie");
-        // navigateTo("/");
-      }
+      .catch(er => responseAxios = er.response)
+      
+      return responseAxios
     },
 
     // async addUser(jwt, name, role, password, discordId, twitchId) {

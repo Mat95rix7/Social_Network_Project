@@ -50,8 +50,10 @@ export const usePostsStore = defineStore("posts", {
         console.log("error", e);
         return e;
       });
-    },
+      return "ok"
+  },
 
+   
     async updatePost(id, message) {
       await axios(
         {

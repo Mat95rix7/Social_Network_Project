@@ -30,13 +30,10 @@
     const { emit } = defineEmits(['close']);
     const myPost = defineProps(['post'])
     
-
     const idPost = ref(myPost.post._id)
     const contentInput = ref(myPost.post.message)
     const error = ref("");
     
-    
-
     const updatePost = async () => {
       await postsStore.updatePost(
         idPost.value,

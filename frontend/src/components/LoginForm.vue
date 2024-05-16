@@ -48,7 +48,7 @@ import RegisterForm from "@/components/RegisterForm.vue";
 import { useUsersStore } from "@/stores/user";
 const usersStore = useUsersStore();
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(['close']);
 
 defineProps({
   showForm: {
@@ -74,8 +74,20 @@ const login = async () => {
       error.value = "Veuillez remplir tous les champs";
       return;
     }
-    await usersStore.login(email, password)
-    emit("close")
+    const res = await usersStore.login(email, password)
+    if ( res.status === 200 ) {
+        alert("Votre connexion est réussie");
+        emit('close')
+        location.reload()
+      } else {
+          if(res.data.email != '' ){
+            error.value = res.data.email
+            console.log(error.value)
+          } else {
+            error.value = res.data.password
+            console.log(error.value)
+          }
+        }
   }
 
 const handleChange = () => {
