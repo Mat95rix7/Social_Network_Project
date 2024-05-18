@@ -1,17 +1,16 @@
-version: "3"
+version: "3.8"
 
 services:
     app:
-        container_name: app
+        container_name: myBack
         restart: always
         build: ./api
         ports:
             - "5000:5000"
         depends_on:
             - mongo
-
     client:
-        container_name: client
+        container_name: myFront
         restart: always
         build: ./client
         ports:

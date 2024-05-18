@@ -27,9 +27,6 @@
 
   let token, username, userId
   
-  
-  
-
   if (document.cookie !=''){
     token = document.cookie.split('=')[1];
     const dataStringFromLocalStorage = localStorage.getItem('user');

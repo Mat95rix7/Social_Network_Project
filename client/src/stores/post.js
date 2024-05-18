@@ -41,7 +41,6 @@ export const usePostsStore = defineStore("posts", {
         )
       .then((res) => {
         this.posts.push(res.data)
-        this.posts = this.posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         console.log("Post crée avec succès")
         return
         

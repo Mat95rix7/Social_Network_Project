@@ -78,18 +78,11 @@ export const useUsersStore = defineStore("users", {
         console.log("Déconnection réussie")
         localStorage.setItem('user','');
         document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-        // window.location.reload();
+        location.reload();
       })
       .catch((e) => console.log(e));
     },
-
-     
-    getUser(id){
-        return this.users.find(user => user._id === id)
-    },
-
-
-
+    
     // async addUser(jwt, name, role, password, discordId, twitchId) {
     //   const res = await fetch(`${import.meta.env.VITE_APP_API_URL}user`, {
     //     method: "POST",

@@ -2,15 +2,15 @@
   
   <CreatePost :creatorId="currentUserId"/>
   
-  <div class="w-9/12 bg-gray-700  p-2 mx-auto">
-    <div class=" bg-gray-900 rounded-lg p-2">
+  <div class="w-9/12  bg-gray-700  p-2 mx-auto">
+    <div class="min-h-[50vh] bg-gray-900 rounded-lg p-2">
       <div v-for="post in postsStore.posts" :key="post._id">
         <div class=" bg-black rounded-lg p-2 m-2 text-lg" :id="post._id">
             <div class="flex justify-between" >
                 <h2 class="text-green-500 font-bold" >{{ posterName(post.posterId) }}</h2>
-                <p class="text-white text-sm">Posted  {{ $filters.formatDate(post.updatedAt) }} {{ $filters.formatHour(post.updatedAt) }}  </p>
+                <p class="text-white text-sm">Posted  {{ $filters.formatDate(post.createdAt) }} {{ $filters.formatHour(post.createdAt) }}  </p>
             </div>
-            <p class="text-white text-justify p-2">{{ post.message }}</p>
+            <p class="text-white break-words text-justify p-2">{{ post.message }}</p>
             <div class="flex">
               <div class="flex w-1/2" >
                 <span 
@@ -52,7 +52,7 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue';
+  import { computed, ref } from 'vue';
   import { useUsersStore } from "@/stores/user";
   import { usePostsStore } from "@/stores/post";
   
@@ -61,25 +61,40 @@
   
   const postsStore = usePostsStore();
   const usersStore = useUsersStore();
-
+  
   const currentUser = defineProps(['userId'])
   const currentUserId = currentUser.userId
 
+
+
   const selectedPost = ref(null)
   const filled = ref(false);
-
-  const AdminId = '6647720f05930768a9dfa285'
-    
+  
   function posterName(id){
-    const user = usersStore.getUser(id)
-    return user.username
+    for (const user of usersStore.users){
+      if (user._id === id){
+          return user.username
+      }
+    } 
+  }
+
+  const isAdmin = (id) => {
+    for(const user of usersStore.users){
+      if(user._id === id){
+        return user.isAdmin
+      }
+    }
   }
 
   const checkUser = (id) => {
-    if (currentUserId === id || currentUserId === AdminId){
+    if (isAdmin(currentUserId)){
       return true
-    } else {
-      return false
+    } else { 
+        if(currentUserId === id) {
+          return true
+        } else {
+          return false
+        }
     }
   } 
 
