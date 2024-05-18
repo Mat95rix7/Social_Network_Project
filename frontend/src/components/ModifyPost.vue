@@ -15,7 +15,7 @@
           </textarea>
         </div>
         <button class="inputStyle inputSubmit"
-          type="submit" @click="updatePost(), $emit('close')">Valider les modifications</button>
+          type="submit">Valider les modifications</button>
       </form>
       <span class="error" v-if="error !== ''">{{ error }}</span>
     </div>
@@ -27,7 +27,7 @@
     import { usePostsStore } from "@/stores/post";
     const postsStore = usePostsStore();
     
-    const { emit } = defineEmits(['close']);
+    const emit  = defineEmits(['close']);
     const myPost = defineProps(['post'])
     
     const idPost = ref(myPost.post._id)
@@ -35,12 +35,10 @@
     const error = ref("");
     
     const updatePost = async () => {
-      await postsStore.updatePost(
-        idPost.value,
-        contentInput.value,
-      );
-      // location.reload()
-    };
+      await postsStore.updatePost(idPost.value, contentInput.value)
+      emit('close')
+      return
+    }
 
   </script>
   

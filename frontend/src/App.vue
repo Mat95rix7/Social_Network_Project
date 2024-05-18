@@ -3,7 +3,7 @@
     <LoginForm v-if="!token"  :show-form="showForm" @close="closeForm"/>
     <div v-if="token">
       <Header :username="username"/>
-      <PostList :posterId="posterId"/>
+      <PostList :userId="userId"/>
       <Footer />
     </div>
   </div>
@@ -25,17 +25,21 @@
   
   const showForm = ref(true)
 
-  let token, username, posterId
-  postsStore.setPosts();
-  usersStore.setUsers();
+  let token, username, userId
+  
+  
+  
 
   if (document.cookie !=''){
     token = document.cookie.split('=')[1];
     const dataStringFromLocalStorage = localStorage.getItem('user');
     const dataFromLocalStorage = JSON.parse(dataStringFromLocalStorage);
     username = dataFromLocalStorage.username
-    posterId = dataFromLocalStorage.posterId
+    userId = dataFromLocalStorage.userId
   } 
+
+  const posts = postsStore.setPosts()
+  const users = usersStore.setUsers()
 
   
    

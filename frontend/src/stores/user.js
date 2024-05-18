@@ -39,8 +39,8 @@ export const useUsersStore = defineStore("users", {
           console.log('Utilisateur connecté avec succès');
           responseAxios = res;
           const username = res.data.user.username;
-          const posterId = res.data.user._id;
-          const userData = {'username': username, 'posterId': posterId};
+          const userId = res.data.user._id;
+          const userData = {'username': username, 'userId': userId};
           const dataString = JSON.stringify(userData);
           localStorage.setItem('user', dataString);
       })
@@ -82,6 +82,12 @@ export const useUsersStore = defineStore("users", {
       })
       .catch((e) => console.log(e));
     },
+
+     
+    getUser(id){
+        return this.users.find(user => user._id === id)
+    },
+
 
 
     // async addUser(jwt, name, role, password, discordId, twitchId) {

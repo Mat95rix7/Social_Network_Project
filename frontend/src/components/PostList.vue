@@ -1,6 +1,6 @@
 <template>
   
-  <CreatePost :posterId="posterId"/>
+  <CreatePost :creatorId="currentUserId"/>
   
   <div class="w-9/12 bg-gray-700  p-2 mx-auto">
     <div class=" bg-gray-900 rounded-lg p-2">
@@ -12,27 +12,31 @@
             </div>
             <p class="text-white text-justify p-2">{{ post.message }}</p>
             <div class="flex">
-              <div class="flex w-1/2">
+              <div class="flex w-1/2" >
                 <span 
                       class="material-symbols-outlined
                             cursor-pointer text-green-500" 
                       :class="{liked : isLiked(post)}"
                             title="Like the post" 
-                            @click="toggleLike(post)" 
-                            >star</span>
+                            @click="toggleLike(post)" >star</span>
                 <span :id="post._id" class="px-3 text-xl text-green-500" title="Number of like">{{ post.likers.length }}</span>
               </div>
               <div class="flex w-1/2 justify-end">
+                <span class="material-symbols-outlined 
+                      cursor-pointer text-green-500"
+                      @click="addPicture()"
+                      v-if="checkUser(post.posterId)"
+                      title="Inserer une image">image search</span>
                 <span id="post._id"
                       class="material-symbols-outlined 
                       cursor-pointer text-green-500 px-5" 
-                      v-if="(post.posterId == posterId.posterId) || (post.username = 'Mat95rix7')"
+                      v-if="checkUser(post.posterId)"
                       @click="openEditPopup(post)"
                       title="Edit the post">edit</span>
-                      <span class="material-symbols-outlined 
+                <span class="material-symbols-outlined 
                       cursor-pointer text-green-500"
                       @click="deletePost(post._id)"
-                      v-if="(post.posterId == posterId.posterId) || (post.username = 'Mat95rix7')"
+                      v-if="checkUser(post.posterId)"
                       title="Delete the post">delete</span>
               </div>
               
@@ -58,21 +62,33 @@
   const postsStore = usePostsStore();
   const usersStore = useUsersStore();
 
-  const posterId = defineProps(['posterId'])
-  const userId = posterId.posterId
-  
+  const currentUser = defineProps(['userId'])
+  const currentUserId = currentUser.userId
+
   const selectedPost = ref(null)
-  
-  const posterName = (id) => {
-    for(const user of usersStore.users){
-       if (user._id === id){
-        return user.username
-      }
-    }
+  const filled = ref(false);
+
+  const AdminId = '6647720f05930768a9dfa285'
+    
+  function posterName(id){
+    const user = usersStore.getUser(id)
+    return user.username
   }
+
+  const checkUser = (id) => {
+    if (currentUserId === id || currentUserId === AdminId){
+      return true
+    } else {
+      return false
+    }
+  } 
 
   async function deletePost(id) {
       await postsStore.deletePost(id);
+      return;
+  } 
+
+  async function addPicture(id) {
       return;
   } 
 
@@ -84,23 +100,21 @@
     selectedPost.value = false;
   };
 
-  const filled = ref(false);
-
   const isLiked = (post) => {
-    return post.likers.includes(userId)
+    return post.likers.includes(currentUserId)
   }
 
   async function toggleLike(post){
     if (!isLiked(post)){
-      await postsStore.likePost(userId, post._id);
+      await postsStore.likePost(currentUserId, post._id);
       filled.value = true
       return;
     } else {
-      await postsStore.unlikePost(userId, post._id);
+      await postsStore.unlikePost(currentUserId, post._id);
       filled.value = false
       return;
     }
-}
+  }
   
 </script>
 

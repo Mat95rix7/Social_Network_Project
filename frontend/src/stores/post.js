@@ -1,10 +1,10 @@
-import { defineStore } from "pinia";
+import { defineStore, storeToRefs } from "pinia";
 import axios from 'axios'
 axios.defaults.withCredentials = true;
 
 export const usePostsStore = defineStore("posts", {
   state: () => ({
-    posts: ([]),
+    posts: storeToRefs([]),
   }),
 
   actions: {
@@ -18,7 +18,7 @@ export const usePostsStore = defineStore("posts", {
             }
           })
         .then((res) => {
-          this.posts = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            this.posts = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         })
         .catch((e) => {
           console.log("error", e);
@@ -40,16 +40,18 @@ export const usePostsStore = defineStore("posts", {
             }
         )
       .then((res) => {
-        this.posts.push(res.data);
+        this.posts.push(res.data)
+        this.posts = this.posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         console.log("Post crée avec succès")
+        return
+        
       })
       .catch((e) => {
         console.log("error", e);
         return e;
       });
-  },
+    },
 
-   
     async updatePost(id, message) {
       await axios(
         {
@@ -63,7 +65,11 @@ export const usePostsStore = defineStore("posts", {
           }),
         }
       )
-        .then((r) => console.log("Modification effectuée avec succès"))
+        .then((r) => {
+          const post = this.posts.find((p) => p._id === id);
+          post.message = message;
+          console.log("Modification effectuée avec succès")
+        })
         .catch((e) => {
           console.log(e);
         });
@@ -83,49 +89,57 @@ export const usePostsStore = defineStore("posts", {
               },
         }
       )
-      .then((r) => console.log("suppression reussie !"))
+      .then((r) => {
+        this.posts = this.posts.filter(p => p._id !== id);
+        console.log("suppression reussie !")
+      })
       .catch((e) => { 
         console.log("error", e);
         return e; 
       });
-      this.posts = this.posts.filter(p => p._id !== id);
     },
 
-  async likePost(posterId, id) { 
-    await axios(
-      {
-        method: "PATCH",
-        url: `${import.meta.env.VITE_APP_API_URL}post/like/` + id,
-        headers: {
-          "Content-Type": "application/json", 
-        },
-        data: JSON.stringify({id : posterId})     
-      })
-      .then((r) => console.log("le post est bien liké"))
-      .catch((e) => { 
-        console.log("error", e);
-        return e; 
-      });
-  },
+    async likePost(posterId, id) { 
+      await axios(
+        {
+          method: "PATCH",
+          url: `${import.meta.env.VITE_APP_API_URL}post/like/` + id,
+          headers: {
+            "Content-Type": "application/json", 
+          },
+          data: JSON.stringify({id : posterId})     
+        })
+        .then((r) => {
+          const post = this.posts.find((p) => p._id === id);
+          post.likers.push(posterId);
+          console.log("le post est bien liké")
+        })
+        .catch((e) => { 
+          console.log("error", e);
+          return e; 
+        });
+    },
 
-  async unlikePost(posterId, id) { 
-    await axios(
-      {
-        method: "PATCH",
-        url: `${import.meta.env.VITE_APP_API_URL}post/unlike/` + id,
-        headers: {
-          "Content-Type": "application/json", 
-        },
-        data: JSON.stringify({id : posterId})     
-      })
-      .then((r) => console.log("le post est bien disliké"))
-      .catch((e) => { 
-        console.log("error", e);
-        return e; 
-      });
-  }
-
+    async unlikePost(posterId, id) { 
+      await axios(
+        {
+          method: "PATCH",
+          url: `${import.meta.env.VITE_APP_API_URL}post/unlike/` + id,
+          headers: {
+            "Content-Type": "application/json", 
+          },
+          data: JSON.stringify({id : posterId})     
+        })
+        .then((r) => {
+          const post = this.posts.find((p) => p._id === id);
+          post.likers = post.likers.filter((p) => p != posterId)
+          console.log("le post est bien disliké")
+        })
+        .catch((e) => { 
+          console.log("error", e);
+          return e; 
+        });
+    }
 },
-
-  // persist: true,
+  persist: true,
 });

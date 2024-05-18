@@ -15,14 +15,13 @@
   import { usePostsStore } from '@/stores/post'
   const postsStore = usePostsStore()
   
-  const props = defineProps(["posterId"])
-  const poster = props.posterId.posterId
+  const user = defineProps(['creatorId'])
+  const userId = user.creatorId
   const message = ref('');
   
   async function createPost() {
-      await postsStore.createPost(poster, message.value)
+      await postsStore.createPost(userId, message.value)
       message.value = '';
-      // location.reload()
     }
   </script>
   
