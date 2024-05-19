@@ -87,14 +87,10 @@
   }
 
   const checkUser = (id) => {
-    if (isAdmin(currentUserId)){
+    if (isAdmin(currentUserId) || (currentUserId === id)){
       return true
     } else { 
-        if(currentUserId === id) {
-          return true
-        } else {
-          return false
-        }
+      return false
     }
   } 
 
