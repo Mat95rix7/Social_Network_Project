@@ -20,7 +20,6 @@
     
   <script setup>
   import { ref } from 'vue'
-
   import { usePostsStore } from '@/stores/post'
   const postsStore = usePostsStore()
   
@@ -35,8 +34,6 @@
     message :''
   }
 
-  
-
   const onFileChange = (event) => {
       file = event.target.files[0]
       return file
@@ -48,9 +45,7 @@
         alert("Veuillez saisir un message")
       } else {
         post.message = contentInput.value
-        console.log(post)
         formData.append('post', JSON.stringify(post))
-        
         if(file) {
           formData.append('image', file)
         }

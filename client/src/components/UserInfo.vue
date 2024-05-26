@@ -5,10 +5,10 @@
         <h2 class="text-green-500 text-center text-lg">Edit User Information</h2>
         <form class="w-4/5 flex mx-auto my-3" @submit.prevent="updateUser">
           <div class="w-full p-3 flex justify-center">
-              <label for="image" class="content-center">
+              <label for="image" class="flex content-center">
                 <span class="material-symbols-outlined cursor-pointer 
                   text-green-500 rounded-[20px]" title="Changer votre image de profil">
-                  <img :src="previewImage ? previewImage : picture" alt="Image Preview" class="rounded-[25px]"/>
+                  <img :src="previewImage ? previewImage : picture" alt="Image Preview" class="size-[5vw] rounded-[25px]"/>
                 </span>
               </label>
               <input type="file" @change="onChange" id="image" accept="image/*" style="display: none;">

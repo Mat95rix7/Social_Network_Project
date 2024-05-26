@@ -7,12 +7,15 @@
       <div v-for="post in postsStore.posts" :key="post._id">
         <div class=" bg-black rounded-lg p-2 m-2 text-lg" :id="post._id">
             <div class="flex justify-between" >
-                <h2 class="text-green-500 font-bold" >{{ getUserName(post.posterId) }}</h2>
+              <div class="flex text-left size-8">
+                <img :src="getPicture(post.posterId)" alt="Profil Image" class="rounded-[25px]"/>
+                <h2 class="text-green-500 font-bold mx-5" >{{ getUserName(post.posterId) }}</h2>
+              </div>
                 <p class="text-white text-sm">Posted  {{ $filters.formatDate(post.createdAt) }} {{ $filters.formatHour(post.createdAt) }}  </p>
             </div>
             <div class="flex">
-              <p class="text-white break-words text-justify p-5" :class="post.picture ? 'w-2/3' : 'w-full'">{{ post.message }}</p>
-              <img v-if="post.picture" :src="post.picture" alt="Post Image" class="w-1/3 p-5 rounded-[50px]">  
+              <p class="text-white break-words text-justify p-5" :class="post.picture ? 'w-4/5' : 'w-full'">{{ post.message }}</p>
+              <img v-if="post.picture" :src="post.picture" alt="Post Image" class="size-[16vw] p-5 rounded-[30px]">  
             </div>
             <div class="flex">
               <div class="flex w-1/2" >
@@ -72,6 +75,12 @@
       const user = usersStore.getUserById(id);
       return user ? user.username : 'Unknown User';
     }
+
+    const getPicture = (id) => {
+      const user = usersStore.getUserById(id);
+      return user ? user.picture : 'Unknown User';
+    }
+
 
   // const isAdmin = (id) => {
   //     const user = usersStore.getUserById(id)

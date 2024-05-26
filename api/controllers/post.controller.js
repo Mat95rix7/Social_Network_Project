@@ -36,7 +36,6 @@ exports.createPost = (req, res, next) => {
 
 exports.updatePost = (req, res, next) => {
     const isAdmin = req.body.role
-    console.log(req.file)
     const postObject = req.file ? {
         ...JSON.parse(req.body.post),
         picture: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
@@ -48,7 +47,6 @@ exports.updatePost = (req, res, next) => {
             res.status(401).json({ message : 'Not authorized'})
         } else {
             Post.updateOne({ _id: req.params.id}, { ...postObject, _id: req.params.id})
-            console.log(post, postObject)
             .then(() => res.status(200).json(postObject))
             .catch(error => res.status(401).json({ error }))
         }

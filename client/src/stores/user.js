@@ -63,9 +63,10 @@ export const useUsersStore = defineStore("users", {
       })
       .then((res) => {
           console.log('Utilisateur connecté avec succès');
-          responseAxios = res;
-          sessionStorage.setItem('user', JSON.stringify(res.data.user));
-
+          responseAxios = res
+          const data = res.data.user
+          delete(data.password)
+          sessionStorage.setItem('user', JSON.stringify(data))
       })
       .catch(er => responseAxios = er.response)
       return responseAxios
@@ -99,7 +100,7 @@ export const useUsersStore = defineStore("users", {
       })
       .then((res) => {
         console.log("Déconnection réussie")
-        localStorage.setItem('user','');
+        sessionStorage.setItem('user','');
         document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
         location.reload();
       })
@@ -126,41 +127,26 @@ export const useUsersStore = defineStore("users", {
       return true;
     },
 
-    // async deleteUser(jwt, id) {
-    //   const conf = confirm(
-    //     "Êtes vous sûr de vouloir supprimer cet utilisateur ?"
-    //   );
-    //   if (!conf) {
-    //     return;
-    //   }
-    //   const res = await fetch(`${import.meta.env.VITE_APP_API_URL}user/${id}`, {
-    //     method: "DELETE",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${jwt}`,
-    //     },
-    //   })
-    //     .then((r) => r.json())
-    //     .catch((e) => {
-    //       console.log("error", e);
-    //       return e;
-    //     });
-    //   if (res.statusCode !== 200) {
-    //     if (res.body.error === "Invalid token") {
-    //       return alert("Vous n'êtes pas autorisé à supprimer un utilisateur.");
-    //     }
-    //     if (res.body.error === "Expired token") {
-    //       return alert("Votre session a expiré, veuillez vous reconnecter.");
-    //     } else {
-    //       return alert(
-    //         "Une erreur est survenue lors de la suppression de l'utilisateur."
-    //       );
-    //     }
-    //   }
-    //   //filtrer le tableau des users présent en cookie permet d'éviter un nouvel appel à l'API
-    //   this.users = this.users.filter((user) => user.id !== id);
-    //   return alert("L'utilisateur a bien été supprimé.");
-    // },
+    async deleteUser(id) {
+      const conf = confirm(
+        "Êtes vous sûr de vouloir supprimer votre compte ?"
+      );
+      if (!conf) {
+        return;
+      }
+      const res = await axios(`${import.meta.env.VITE_APP_API_URL}user/`+ id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((r) => r.json())
+        .catch((e) => {
+          console.log("error", e);
+          return e;
+        });
+      return alert("L'utilisateur a bien été supprimé.");
+    },
   },
   persist: true,
 });

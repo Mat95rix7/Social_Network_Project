@@ -1,62 +1,42 @@
 <template>
   <div class="modal">
-    <div class="popup">
-      <form class="space" id="post" @submit.prevent="updatePost">
-        <span class="material-symbols-outlined text-green-500 cursor-pointer flex justify-end" @click="$emit('close')">
-            Close
-          </span>
+    <form class="space" id="post" @submit.prevent="updatePost">
+      <div class="flex flex-row justify-between">
         <h3 class="text-green-500 text-2xl">Modifier le Post</h3>
-        <div class="input">
-          <textarea
-            name="message"
-            class="inputStyle textStyle"
-            type="text"
-            v-model="contentInput">
-          </textarea>
-        </div>
-        <div class="flex flex-row">
-            <div class="w-1/2 flex justify-center">
-              <label for="image" class="content-center">
-                <span class="material-symbols-outlined cursor-pointer 
-                  text-green-500" title="Ajouter une image">image</span>
-              </label>
-              <input type="file" @change="onFileChange" id="image" accept="image/*" style="display: none;">
-            </div>
-            <button class="inputStyle inputSubmit" type="submit">Valider les modifications</button>
-        </div>  
-      </form>
-    </div>
+        <span class="material-symbols-outlined text-green-500 cursor-pointer flex justify-end" @click="$emit('close')">Close</span>
+      </div>
+      <textarea name="message" class="inputStyle textStyle" type="text" v-model="contentInput"></textarea>
+      <div class="flex flex-row mx-auto">
+          <div class="w-2/5 ml-8 flex justify-center">
+            <label for="image" class="content-center"></label>
+            <input type="file" @change="onChange" id="image" accept="image/*"/>
+          </div>
+          <button type="submit" class="inputSubmit w-2/5" >Valider les modifications</button>
+      </div>  
+    </form>
   </div>
-  </template>
+</template>
   
   <script setup>
+
     import { ref } from 'vue';
     import { usePostsStore } from "@/stores/post";
-    import { useUsersStore } from "@/stores/user";
     const postsStore = usePostsStore();
-    const usersStore = useUsersStore();
-
+    
     const emit  = defineEmits(['close'])
     const myPost = defineProps(['post','currentUser'])
     const myUser = myPost.currentUser.currentUser
     
     const idPost = ref(myPost.post._id)
     const contentInput = ref(myPost.post.message)
-    const userId = ref(myUser._id)
     const role = myUser.isAdmin
-        
+    
     const formData = new FormData()
     
-    const onFileChange = (event) => {
-      console.log('Hello')
+    const onChange = (event) => {
       const file = event.target.files[0]
       formData.append('image', file)
     }
-
-    // const role = (id) => {
-    //   const user = usersStore.getUserById(id)
-    //   return user.isAdmin
-    // }
 
     const updatePost = () => {
       myPost.post.message = contentInput
@@ -88,9 +68,9 @@
     text-align: center;
     background-color: #374151;
     color: white;
-    margin: 1vw;
-    display: block;
-    width: 30vw;
+    margin: 1vw auto;
+    /* display: block; */
+    width: 95%;
     padding: 0.4rem;
   }
   .textStyle{
@@ -124,7 +104,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Arrière-plan semi-transparent pour assombrir le contenu en dessous */
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
