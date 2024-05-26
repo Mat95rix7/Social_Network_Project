@@ -7,25 +7,23 @@
           <div class="w-full p-3 flex justify-center">
               <label for="image" class="content-center">
                 <span class="material-symbols-outlined cursor-pointer 
-                  text-green-500" title="Ajouter une image de profil" v-show="previewImage">
-                  <img v-if="previewImage" :src="previewImage" alt="Image Preview" class="w-36"/>
+                  text-green-500 rounded-[20px]" title="Changer votre image de profil">
+                  <img :src="previewImage ? previewImage : picture" alt="Image Preview" class="rounded-[25px]"/>
                 </span>
-                <span class="material-symbols-outlined cursor-pointer 
-                  text-green-500" title="Ajouter une image de profil" v-show="!previewImage">image</span>
               </label>
               <input type="file" @change="onChange" id="image" accept="image/*" style="display: none;">
           </div>
           <div class="flex flex-row m-2 bg-black rounded-lg">
             <label for="username" class="text-green-500 w-1/3 m-2 p-2 text-lg">Username:</label>
-            <input type="text" class="bg-gray-400 text-black w-2/3 m-2 p-2 rounded-lg text-lg" v-model="user.username" id="username" required/>
+            <span type="text" class="bg-gray-400 text-black w-2/3 m-2 p-2 rounded-lg text-lg">{{ username }}</span>
           </div>
           <div class="flex flex-row m-2 bg-black rounded-lg">
             <label for="email" class="text-green-500 w-1/3 m-2 p-2 text-lg">Email:</label>
-            <input type="email" class="bg-gray-400 text-black w-2/3 m-2 p-2 rounded-lg text-lg" v-model="user.email" id="email"/>
+            <span type="email" class="bg-gray-400 text-black w-2/3 m-2 p-2 rounded-lg text-lg"> {{ email }}</span>
           </div>  
           <div class="flex m-2 bg-black rounded-lg">
             <span class="text-green-500 w-1/3 m-2 p-2 text-lg">Post Likés :</span>
-            <span class="bg-gray-400 text-black w-2/3 m-2 p-2 rounded-lg text-lg">{{user.likes.length}}</span>
+            <span class="bg-gray-400 text-black w-2/3 m-2 p-2 rounded-lg text-lg">{{currentUser.User.likes.length}}</span>
           </div>
           <button type="submit" class="mt-10 m-2 p-2 bg-green-500 text-white text-lg text-center rounded-lg">Save Changes</button>
         </form>
@@ -37,16 +35,24 @@
   </template>
   
   <script setup>
+  import { ref } from 'vue'
   import { useUsersStore } from "@/stores/user";
   const usersStore = useUsersStore();
   const emit  = defineEmits(['close'])
-  const myUser = defineProps(['ourUser'])
-  const user = usersStore.getUserById(myUser.ourUser)
+  const currentUser = defineProps(['User'])
+  
   const show = true
   let previewImage = ''
 
-  const formData = new FormData()
+  const username = currentUser.User.username
+  const email = currentUser.User.email
+  const picture = ref(currentUser.User.picture)
+  // console.log(currentUser)
 
+  const formData = new FormData()
+  const user = {
+    'username' : username
+  }
   const onChange = (event) => {
       const file = event.target.files[0]
       formData.append('image', file)
@@ -55,7 +61,8 @@
   
     const updateUser = () => {
       formData.append('user', JSON.stringify(user))
-      usersStore.updateUser(user._id, formData)
+      usersStore.updateUser(currentUser.User._id, formData)
+      location.reload()
       emit('close')
       return
     }

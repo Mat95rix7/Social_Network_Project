@@ -24,8 +24,9 @@
   import { usePostsStore } from '@/stores/post'
   const postsStore = usePostsStore()
   
-  const user = defineProps(['creatorId'])
-  const userId = user.creatorId
+  const user = defineProps(['current'])
+  const ourUser = user.current.currentUser
+  const userId = ourUser._id
   const contentInput = ref('');
   let file
 

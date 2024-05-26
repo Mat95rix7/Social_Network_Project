@@ -64,19 +64,8 @@ export const useUsersStore = defineStore("users", {
       .then((res) => {
           console.log('Utilisateur connecté avec succès');
           responseAxios = res;
-          // const userId = res.data.user._id;
-          // const username = res.data.user.username;
-          // const picture = res.data.user.picture;
-          // const userData = {
-          //   'username': username, 
-          //   'userId': userId,
-          //   'picture': picture
-          // };
-          userData = res.data.user
-          const dataString = JSON.stringify(userData);
-          console.log(userData, dataString)
-          localStorage.setItem('user', dataString);
-          // this.currentUser =  res.data.user
+          sessionStorage.setItem('user', JSON.stringify(res.data.user));
+
       })
       .catch(er => responseAxios = er.response)
       return responseAxios
@@ -117,14 +106,18 @@ export const useUsersStore = defineStore("users", {
       .catch((e) => console.log(e));
     },
 
-    async updateUser(id, formData) {
-      await axios(
+    updateUser(id, formData) {
+      axios(
         {
           method: "PUT",
           url : `${import.meta.env.VITE_APP_API_URL}user/` + id,
           data : formData
       })
-        .then((r) => console.log(r))
+        .then((r) => {
+          const data = JSON.parse(sessionStorage.user)
+          data.picture = r.data
+          sessionStorage.setItem('user', JSON.stringify(data))  
+        })
         .catch((e) => {
           console.log(e);
           return false;

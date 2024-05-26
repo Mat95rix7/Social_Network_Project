@@ -50,8 +50,7 @@ exports.updateUser = (req, res, next) => {
                 res.status(401).json({ message : 'Not authorized'})
             } else {
                 User.updateOne({ _id: req.params.id}, { ...userObject, _id: req.params.id})
-                // console.log(user)
-                .then(() => res.status(200).json(user))
+                .then(() => res.status(200).json(userObject.picture))
                 .catch(error => res.status(401).json({ error }))
             }
         })

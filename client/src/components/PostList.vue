@@ -1,6 +1,6 @@
 <template>
   
-  <CreatePost :creatorId="currentUserId"/>
+  <CreatePost :current="User"/>
   
   <div class="w-9/12  bg-gray-700  p-2 mx-auto">
     <div class="min-h-[50vh] bg-gray-900 rounded-lg p-2">
@@ -42,7 +42,7 @@
         </div>
       </div>
 
-      <ModifyPost v-if="selectedPost" @close="closeEditPopup" :post="selectedPost" :currentUser="currentUserId"/>
+      <ModifyPost v-if="selectedPost" @close="closeEditPopup" :post="selectedPost" :currentUser="User"/>
 
     </div>
   </div>
@@ -60,9 +60,11 @@
   const postsStore = usePostsStore();
   const usersStore = useUsersStore();
   
-  const currentUser = defineProps(['userId'])
-  const currentUserId = currentUser.userId
-  
+  const User = defineProps(['currentUser'])
+
+  const userId = User.currentUser._id
+  const isAdmin = User.currentUser.isAdmin
+
   const selectedPost = ref(null)
   const filled = ref(false);
 
@@ -71,13 +73,13 @@
       return user ? user.username : 'Unknown User';
     }
 
-  const isAdmin = (id) => {
-      const user = usersStore.getUserById(id)
-        return user.isAdmin
-    }
+  // const isAdmin = (id) => {
+  //     const user = usersStore.getUserById(id)
+  //       return user.isAdmin
+  //   }
 
   const checkUser = (id) => {
-    if (isAdmin(currentUserId) || (currentUserId === id)){
+    if (isAdmin || (userId === id)){
       return true
     } else { 
       return false
@@ -85,8 +87,7 @@
   } 
 
   async function deletePost(id) {
-      console.log(isAdmin(currentUserId))
-      await postsStore.deletePost(id, isAdmin(currentUserId));
+      await postsStore.deletePost(id, isAdmin);
       return;
   } 
 
@@ -99,16 +100,16 @@
   };
 
   const isLiked = (post) => {
-    return post.likers.includes(currentUserId)
+    return post.likers.includes(userId)
   }
 
   async function toggleLike(post){
     if (!isLiked(post)){
-      await postsStore.likePost(currentUserId, post._id);
+      await postsStore.likePost(userId, post._id);
       filled.value = true
       return;
     } else {
-      await postsStore.unlikePost(currentUserId, post._id);
+      await postsStore.unlikePost(userId, post._id);
       filled.value = false
       return;
     }

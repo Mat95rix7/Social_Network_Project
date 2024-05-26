@@ -22,9 +22,7 @@
               </label>
               <input type="file" @change="onFileChange" id="image" accept="image/*" style="display: none;">
             </div>
-            <div>
-              <button class="inputStyle inputSubmit" type="submit">Valider les modifications</button>
-            </div>
+            <button class="inputStyle inputSubmit" type="submit">Valider les modifications</button>
         </div>  
       </form>
     </div>
@@ -40,29 +38,30 @@
 
     const emit  = defineEmits(['close'])
     const myPost = defineProps(['post','currentUser'])
+    const myUser = myPost.currentUser.currentUser
     
     const idPost = ref(myPost.post._id)
-    const userId = ref(myPost.currentUser)
     const contentInput = ref(myPost.post.message)
-    
-    
+    const userId = ref(myUser._id)
+    const role = myUser.isAdmin
+        
     const formData = new FormData()
     
     const onFileChange = (event) => {
+      console.log('Hello')
       const file = event.target.files[0]
-      console.log(file)
       formData.append('image', file)
     }
 
-    const role = (id) => {
-      const user = usersStore.getUserById(id)
-      return user.isAdmin
-    }
+    // const role = (id) => {
+    //   const user = usersStore.getUserById(id)
+    //   return user.isAdmin
+    // }
 
     const updatePost = () => {
       myPost.post.message = contentInput
       formData.append('post', JSON.stringify(myPost.post))
-      formData.append('role', role(userId.value))
+      formData.append('role', role)
       postsStore.updatePost(idPost.value, formData)
       emit('close')
       return
