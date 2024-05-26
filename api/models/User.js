@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema(
         },
         picture:{
             type: String,
-            default: ""
+            default: "http://localhost:5000/images/profil/star.png"
         },
         likes:{
             type: [String]

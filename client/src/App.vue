@@ -2,7 +2,7 @@
   <div class="w-full bg-gray-700 p-5" :class="token ? 'h_full' : 'h-screen'">
     <LoginForm v-if="!token"  :show-form="showForm" @close="closeForm"/>
     <div v-if="token">
-      <Header :username="username"/>
+      <Header :username="username" :userId="userId"/>
       <PostList :userId="userId"/>
       <Footer />
     </div>
@@ -30,13 +30,16 @@
   if (document.cookie !=''){
     token = document.cookie.split('=')[1];
     const dataStringFromLocalStorage = localStorage.getItem('user');
-    const dataFromLocalStorage = JSON.parse(dataStringFromLocalStorage);
-    username = dataFromLocalStorage.username
-    userId = dataFromLocalStorage.userId
-  } 
-
-  const posts = postsStore.setPosts()
-  const users = usersStore.setUsers()
+    // const dataFromLocalStorage = JSON.parse(dataStringFromLocalStorage);
+    // username = dataFromLocalStorage.username
+    // userId = dataFromLocalStorage.userId
+    // picture = dataFromLocalStorage.picture
+    console.log(dataStringFromLocalStorage)
+    postsStore.setPosts()
+    usersStore.setUsers()
+    usersStore.setUser(userId)
+  }
+  
 
   
    

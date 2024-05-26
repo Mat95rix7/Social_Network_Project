@@ -4,9 +4,35 @@ axios.defaults.withCredentials = true;
 
 export const useUsersStore = defineStore("users", {
   state: () => ({
-    users: storeToRefs([]),
+    users: [],
+    currentUser: null,
   }),
+
+  getters: {
+    getUserById: (state) => {
+      return (id) => state.users.find(user => user._id === id)
+    },
+    // getCurrentUser :() => this.currentUser = state.currentUser
+  },
+
   actions: {
+    async setUser(id) {
+      await axios(
+        {
+          method: "GET",
+          url: `${import.meta.env.VITE_APP_API_URL}user/`+ id,
+          headers: {
+            "Content-Type": "application/json",
+            }
+        })
+      .then((res) => {
+        this.currentUser = res.data;
+      })
+      .catch((e) => {
+        console.log("error", e);
+      });
+    },
+
     async setUsers() {
       await axios(
         {
@@ -38,11 +64,19 @@ export const useUsersStore = defineStore("users", {
       .then((res) => {
           console.log('Utilisateur connecté avec succès');
           responseAxios = res;
-          const username = res.data.user.username;
-          const userId = res.data.user._id;
-          const userData = {'username': username, 'userId': userId};
+          // const userId = res.data.user._id;
+          // const username = res.data.user.username;
+          // const picture = res.data.user.picture;
+          // const userData = {
+          //   'username': username, 
+          //   'userId': userId,
+          //   'picture': picture
+          // };
+          userData = res.data.user
           const dataString = JSON.stringify(userData);
+          console.log(userData, dataString)
           localStorage.setItem('user', dataString);
+          // this.currentUser =  res.data.user
       })
       .catch(er => responseAxios = er.response)
       return responseAxios
@@ -82,40 +116,22 @@ export const useUsersStore = defineStore("users", {
       })
       .catch((e) => console.log(e));
     },
-    
-    // async addUser(jwt, name, role, password, discordId, twitchId) {
-    //   const res = await fetch(`${import.meta.env.VITE_APP_API_URL}user`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${jwt}`,
-    //     },
-    //     body: JSON.stringify({
-    //       username,
-    //       email,
-    //       password,
-    //       likers
-    //     }),
-    //   })
-    //     .then((r) => r.json())
-    //     .catch((e) => {
-    //       console.log("error", e);
-    //       return e;
-    //     });
-    //   if (res.statusCode !== 200) {
-    //     if (res.body.error === "Invalid token") {
-    //       return alert("Vous n'êtes pas autorisé à créer un utilisateur.");
-    //     }
-    //     if (res.body.error === "Expired token") {
-    //       return alert("Votre session a expiré, veuillez vous reconnecter.");
-    //     } else {
-    //       return alert(
-    //         "Une erreur est survenue lors de la création de l'utilisateur."
-    //       );
-    //     }
-    //   }
-    //   return true;
-    // },
+
+    async updateUser(id, formData) {
+      await axios(
+        {
+          method: "PUT",
+          url : `${import.meta.env.VITE_APP_API_URL}user/` + id,
+          data : formData
+      })
+        .then((r) => console.log(r))
+        .catch((e) => {
+          console.log(e);
+          return false;
+        });
+      alert("L'utilisateur a bien été modifié.");
+      return true;
+    },
 
     // async deleteUser(jwt, id) {
     //   const conf = confirm(
@@ -151,43 +167,6 @@ export const useUsersStore = defineStore("users", {
     //   //filtrer le tableau des users présent en cookie permet d'éviter un nouvel appel à l'API
     //   this.users = this.users.filter((user) => user.id !== id);
     //   return alert("L'utilisateur a bien été supprimé.");
-    // },
-
-    // async updateUser(jwt, id, username, email, password) {
-    //   const res = await fetch(`${import.meta.env.VITE_APP_API_URL}user/${id}`, {
-    //     method: "PUT",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: `Bearer ${jwt}`,
-    //     },
-    //     body: JSON.stringify({
-    //       username,
-    //       email,
-    //       password,
-    //     }),
-    //   })
-    //     .then((r) => r.json())
-    //     .catch((e) => {
-    //       console.log("error", e);
-    //       return false;
-    //     });
-    //   if (res.statusCode !== 200) {
-    //     console.log("error", res.body.error);
-    //     if (res.body.error === "Invalid token") {
-    //       alert("Vous n'êtes pas autorisé à modifier un utilisateur.");
-    //       return false;
-    //     }
-    //     if (res.body.error === "Expired token") {
-    //       alert("Votre session a expiré, veuillez vous reconnecter.");
-    //       return false;
-    //     }
-    //     alert(
-    //       "Une erreur est survenue lors de la modification de l'utilisateur."
-    //     );
-    //     return false;
-    //   }
-    //   alert("L'utilisateur a bien été modifié.");
-    //   return true;
     // },
   },
   persist: true,

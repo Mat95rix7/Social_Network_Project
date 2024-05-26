@@ -7,10 +7,13 @@
       <div v-for="post in postsStore.posts" :key="post._id">
         <div class=" bg-black rounded-lg p-2 m-2 text-lg" :id="post._id">
             <div class="flex justify-between" >
-                <h2 class="text-green-500 font-bold" >{{ posterName(post.posterId) }}</h2>
+                <h2 class="text-green-500 font-bold" >{{ getUserName(post.posterId) }}</h2>
                 <p class="text-white text-sm">Posted  {{ $filters.formatDate(post.createdAt) }} {{ $filters.formatHour(post.createdAt) }}  </p>
             </div>
-            <p class="text-white break-words text-justify p-2">{{ post.message }}</p>
+            <div class="flex">
+              <p class="text-white break-words text-justify p-5" :class="post.picture ? 'w-2/3' : 'w-full'">{{ post.message }}</p>
+              <img v-if="post.picture" :src="post.picture" alt="Post Image" class="w-1/3 p-5 rounded-[50px]">  
+            </div>
             <div class="flex">
               <div class="flex w-1/2" >
                 <span 
@@ -22,19 +25,14 @@
                 <span :id="post._id" class="px-3 text-xl text-green-500" title="Number of like">{{ post.likers.length }}</span>
               </div>
               <div class="flex w-1/2 justify-end">
-                <span class="material-symbols-outlined 
-                      cursor-pointer text-green-500"
-                      @click="addPicture()"
-                      v-if="checkUser(post.posterId)"
-                      title="Inserer une image">image search</span>
                 <span id="post._id"
                       class="material-symbols-outlined 
-                      cursor-pointer text-green-500 px-5" 
+                      cursor-pointer text-green-500" 
                       v-if="checkUser(post.posterId)"
                       @click="openEditPopup(post)"
                       title="Edit the post">edit</span>
                 <span class="material-symbols-outlined 
-                      cursor-pointer text-green-500"
+                      cursor-pointer text-green-500 px-10"
                       @click="deletePost(post._id)"
                       v-if="checkUser(post.posterId)"
                       title="Delete the post">delete</span>
@@ -44,7 +42,7 @@
         </div>
       </div>
 
-      <ModifyPost v-if="selectedPost" @close="closeEditPopup" :post="selectedPost"/>
+      <ModifyPost v-if="selectedPost" @close="closeEditPopup" :post="selectedPost" :currentUser="currentUserId"/>
 
     </div>
   </div>
@@ -52,7 +50,7 @@
 </template>
 
 <script setup>
-  import { computed, ref } from 'vue';
+  import { ref } from 'vue';
   import { useUsersStore } from "@/stores/user";
   import { usePostsStore } from "@/stores/post";
   
@@ -64,27 +62,19 @@
   
   const currentUser = defineProps(['userId'])
   const currentUserId = currentUser.userId
-
-
-
+  
   const selectedPost = ref(null)
   const filled = ref(false);
-  
-  function posterName(id){
-    for (const user of usersStore.users){
-      if (user._id === id){
-          return user.username
-      }
-    } 
-  }
+
+  const getUserName = (id) => {
+      const user = usersStore.getUserById(id);
+      return user ? user.username : 'Unknown User';
+    }
 
   const isAdmin = (id) => {
-    for(const user of usersStore.users){
-      if(user._id === id){
+      const user = usersStore.getUserById(id)
         return user.isAdmin
-      }
     }
-  }
 
   const checkUser = (id) => {
     if (isAdmin(currentUserId) || (currentUserId === id)){
@@ -95,11 +85,8 @@
   } 
 
   async function deletePost(id) {
-      await postsStore.deletePost(id);
-      return;
-  } 
-
-  async function addPicture(id) {
+      console.log(isAdmin(currentUserId))
+      await postsStore.deletePost(id, isAdmin(currentUserId));
       return;
   } 
 

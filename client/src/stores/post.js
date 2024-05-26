@@ -25,22 +25,44 @@ export const usePostsStore = defineStore("posts", {
         });
     },
 
-    async createPost(posterId, message) {
+    // async createPost(posterId, message) {
+    //   await axios(
+    //         {
+    //           method: "POST",
+    //           url: `${import.meta.env.VITE_APP_API_URL}post`,
+    //           headers: {
+    //             "Content-Type": "application/json",
+    //           },
+    //           data: JSON.stringify({
+    //                 posterId,
+    //                 message
+    //               }),
+    //         }
+    //     )
+    //   .then((res) => {
+    //     this.posts.push(res.data)
+    //     this.posts = this.posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    //     console.log("Post crée avec succès")
+    //     return
+        
+    //   })
+    //   .catch((e) => {
+    //     console.log("error", e);
+    //     return e;
+    //   });
+    // },
+
+    async createPost(formData) {
       await axios(
             {
               method: "POST",
               url: `${import.meta.env.VITE_APP_API_URL}post`,
-              headers: {
-                "Content-Type": "application/json",
-              },
-              data: JSON.stringify({
-                    posterId,
-                    message
-                  }),
+              data: formData
             }
         )
       .then((res) => {
         this.posts.push(res.data)
+        this.posts = this.posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         console.log("Post crée avec succès")
         return
         
@@ -51,30 +73,28 @@ export const usePostsStore = defineStore("posts", {
       });
     },
 
-    async updatePost(id, message) {
+
+    async updatePost(id, formData) {
       await axios(
         {
-          method: "PUT",
+          method : "PUT",
           url : `${import.meta.env.VITE_APP_API_URL}post/` + id,
-          headers: {
-            "Content-Type": "application/json",
-            },
-          data: JSON.stringify({
-            message,
-          }),
-        }
-      )
+          data : formData
+        })
         .then((r) => {
           const post = this.posts.find((p) => p._id === id);
-          post.message = message;
+          post.message = r.data.message;
+          post.picture = r.data.picture
           console.log("Modification effectuée avec succès")
+          return
         })
         .catch((e) => {
           console.log(e);
         });
     },
 
-    async deletePost(id) {
+
+    async deletePost(id, isAdmin) {
       const conf = confirm("Voulez-vous vraiment supprimer ce post ?");
       if (!conf) {
         return;
@@ -86,6 +106,7 @@ export const usePostsStore = defineStore("posts", {
           headers: {
                 "Content-Type": "application/json",
               },
+          data : { 'role' : isAdmin} 
         }
       )
       .then((r) => {

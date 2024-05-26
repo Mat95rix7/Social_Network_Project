@@ -1,11 +1,11 @@
 <template>
   <div class="modal">
     <div class="popup">
-      <form class="space" @submit.prevent="updatePost">
+      <form class="space" id="post" @submit.prevent="updatePost">
         <span class="material-symbols-outlined text-green-500 cursor-pointer flex justify-end" @click="$emit('close')">
             Close
           </span>
-        <h3 class="text-green-500 text-3xl">Modifier le Post</h3>
+        <h3 class="text-green-500 text-2xl">Modifier le Post</h3>
         <div class="input">
           <textarea
             name="message"
@@ -14,10 +14,19 @@
             v-model="contentInput">
           </textarea>
         </div>
-        <button class="inputStyle inputSubmit"
-          type="submit">Valider les modifications</button>
+        <div class="flex flex-row">
+            <div class="w-1/2 flex justify-center">
+              <label for="image" class="content-center">
+                <span class="material-symbols-outlined cursor-pointer 
+                  text-green-500" title="Ajouter une image">image</span>
+              </label>
+              <input type="file" @change="onFileChange" id="image" accept="image/*" style="display: none;">
+            </div>
+            <div>
+              <button class="inputStyle inputSubmit" type="submit">Valider les modifications</button>
+            </div>
+        </div>  
       </form>
-      <span class="error" v-if="error !== ''">{{ error }}</span>
     </div>
   </div>
   </template>
@@ -25,17 +34,36 @@
   <script setup>
     import { ref } from 'vue';
     import { usePostsStore } from "@/stores/post";
+    import { useUsersStore } from "@/stores/user";
     const postsStore = usePostsStore();
-    
-    const emit  = defineEmits(['close']);
-    const myPost = defineProps(['post'])
+    const usersStore = useUsersStore();
+
+    const emit  = defineEmits(['close'])
+    const myPost = defineProps(['post','currentUser'])
     
     const idPost = ref(myPost.post._id)
+    const userId = ref(myPost.currentUser)
     const contentInput = ref(myPost.post.message)
-    const error = ref("");
     
-    const updatePost = async () => {
-      await postsStore.updatePost(idPost.value, contentInput.value)
+    
+    const formData = new FormData()
+    
+    const onFileChange = (event) => {
+      const file = event.target.files[0]
+      console.log(file)
+      formData.append('image', file)
+    }
+
+    const role = (id) => {
+      const user = usersStore.getUserById(id)
+      return user.isAdmin
+    }
+
+    const updatePost = () => {
+      myPost.post.message = contentInput
+      formData.append('post', JSON.stringify(myPost.post))
+      formData.append('role', role(userId.value))
+      postsStore.updatePost(idPost.value, formData)
       emit('close')
       return
     }
@@ -61,7 +89,7 @@
     text-align: center;
     background-color: #374151;
     color: white;
-    margin: 2vw 4vw;
+    margin: 1vw;
     display: block;
     width: 30vw;
     padding: 0.4rem;
