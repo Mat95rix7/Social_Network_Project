@@ -25,33 +25,6 @@ export const usePostsStore = defineStore("posts", {
         });
     },
 
-    // async createPost(posterId, message) {
-    //   await axios(
-    //         {
-    //           method: "POST",
-    //           url: `${import.meta.env.VITE_APP_API_URL}post`,
-    //           headers: {
-    //             "Content-Type": "application/json",
-    //           },
-    //           data: JSON.stringify({
-    //                 posterId,
-    //                 message
-    //               }),
-    //         }
-    //     )
-    //   .then((res) => {
-    //     this.posts.push(res.data)
-    //     this.posts = this.posts.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    //     console.log("Post crée avec succès")
-    //     return
-        
-    //   })
-    //   .catch((e) => {
-    //     console.log("error", e);
-    //     return e;
-    //   });
-    // },
-
     async createPost(formData) {
       await axios(
             {
@@ -73,7 +46,6 @@ export const usePostsStore = defineStore("posts", {
       });
     },
 
-
     async updatePost(id, formData) {
       await axios(
         {
@@ -92,7 +64,6 @@ export const usePostsStore = defineStore("posts", {
           console.log(e);
         });
     },
-
 
     async deletePost(id, isAdmin) {
       const conf = confirm("Voulez-vous vraiment supprimer ce post ?");
@@ -162,4 +133,4 @@ export const usePostsStore = defineStore("posts", {
     }
 },
   persist: true,
-});
+})

@@ -1,4 +1,4 @@
-version: "3.8"
+version: "3.9"
 
 services:
     app:
@@ -14,15 +14,13 @@ services:
         restart: always
         build: ./client
         ports:
-            - "5173:5173"
+            - "80:5173"
         depends_on:
             - app
 
     mongo:
         container_name: mongo
         restart: always
-        image: mongo
-        volumes:
-            - ./data:/data/db
+        image: mongo:latest
         ports:
             - "27017:27017"
