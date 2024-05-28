@@ -4,7 +4,7 @@ const User = require('../models/User')
 const { registerErrors, loginErrors } = require('../utils/errors')
 require('dotenv').config({path:'../config/'})
 
-const maxAge = 2 * 3600000
+const maxAge = 2 * 60 * 60 * 1000
 
 module.exports.signUp = async (req, res) => {
     const {username, email, password} = req.body
@@ -79,6 +79,6 @@ exports.userInfo = (req, res, next) => {
 
 exports.deleteUser = (req, res, next) => {
   User.deleteOne({_id : req.params.id})
-  .then(() => res.status(200).json({ message : 'success unsubcribe !'}))
+  .then(() => res.status(200).json({ message : 'Compte Supprimé !'}))
   .catch((err) => res.status(400).json({err}))
 }

@@ -1,0 +1,17 @@
+
+	Compte Administrateur
+	
+		Mail : n.djam71@gmail.com
+		Password  : Mat95-@diA#71
+		
+	
+	.env pour le back a mettre dans le dossier /api/config/
+		
+		connectMongoDB = Mat95rix7:PzZTZi1W9PJJupQK
+		PORT=5000
+		MyToken=RqPTuDUrDi18DZcMgc6u0TwBo8LACeTIQ9IO6djoKTOuy5qgeVkuKmj9eI58IR0q
+		
+	
+	.env pour le front à mettre dans le dossier /client/
+	
+		VITE_APP_API_URL = http://localhost:5000/api/
