@@ -81,4 +81,4 @@ Accédez à http://localhost:5173/ dans votre navigateur pour accéder au serveu
   - (Si connecté) peut mettre ou modifier leur photos de profil.
 
 Note :
-  Les informations sur les variables d'environnement et le mode admin sont le fichier .default
+  Les informations sur les variables d'environnement et le mode admin sont dans le fichier .default
