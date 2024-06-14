@@ -44,7 +44,7 @@ describe('SignUp', () => {
 
     const res = await request(app).get('/api/user');
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveLength(2);
+    expect(res.body).toHaveLength(3);
   });
 
   it('should create a new user with a same username', async () => {
@@ -153,7 +153,7 @@ describe('login', () => {
 });
 
 describe('delete', () => {
-  it('should delete user', async () => {
+  it('should delete a user by id', async () => {
     await request(app)
         .post('/api/user/signup')
         .send({
@@ -161,22 +161,101 @@ describe('delete', () => {
             email: 'testuser@test.fr',
             password: 'password123'
         })
-
-    await request(app)
-    .post('/api/user/login')
-    .send({ 
-      email: 'testuser@test.fr',
-      password: 'password123'
-    })
-
+    const r = await request(app)
+        .post('/api/user/login')
+        .send({ 
+          email: 'testuser@test.fr',
+          password: 'password123'
+        })
+        .set({accept : "application/json"})
+        const user = r.body.user._id
+        const token = r.body.token
     const res = await request(app)
-      .post('/api/user/login')
-      .send({ 
-        email: 'testuser@test.fr',
-        password: 'password123'
-      })
-      .set({accept : "application/json"})
-    expect(res.status).toEqual(200);
+    .delete(`/api/user/${user}`)
+    .set('Cookie', `MyCookie=${token}`)
+    expect(res.status).toEqual(200)
+    expect(res.body).toHaveProperty('message', 'Compte Supprimé !');
+    });
+    it('shouldnt delete a user without auth', async () => {
+      const user = '6669bff1eaf98299bf9e6a99'
+      const token = 'authToken'
+      const res = await request(app)
+      .delete(`/api/user/${user}`)
+      .set('Cookie', `MyCookie=${token}`)
+      expect(res.status).toEqual(401)
+      });
+});
 
-  })
+describe('User Info', () => {
+  it('should fetch one user by id', async () => {
+    await request(app)
+        .post('/api/user/signup')
+        .send({
+            username: 'testuser', 
+            email: 'testuser@test.fr',
+            password: 'password123'
+        })
+    const r = await request(app)
+        .post('/api/user/login')
+        .send({ 
+          email: 'testuser@test.fr',
+          password: 'password123'
+        })
+        .set({accept : "application/json"})
+        const user = r.body.user._id
+        const token = r.body.token
+    const res = await request(app)
+    .get(`/api/user/${user}`)
+    .set('Cookie', `MyCookie=${token}`)
+    expect(res.status).toEqual(200)
+    });
+    it('shouldnt fetch a user without auth', async () => {
+      const user = '6669bff1eaf98299bf9e6a99'
+      const token = 'authToken'
+      const res = await request(app)
+      .get(`/api/user/${user}`)
+      .set('Cookie', `MyCookie=${token}`)
+      expect(res.status).toEqual(401)
+      });
+});
+
+describe('UpdateUser', () => {
+  it('should update user by id', async () => {
+    await request(app)
+        .post('/api/user/signup')
+        .send({
+            username: 'testuser', 
+            email: 'testuser@test.fr',
+            password: 'password123'
+        })
+    const r = await request(app)
+        .post('/api/user/login')
+        .send({ 
+          email: 'testuser@test.fr',
+          password: 'password123'
+        })
+        .set({accept : "application/json"})
+        const user = r.body.user
+        const token = r.body.token
+        const userId = user._id
+        const userS = JSON.stringify(user)
+    const res = await request(app)
+    .put(`/api/user/${userId}`)
+    .send({
+      'file' : '1.jpg',
+      'user' : `${userS}`
+      }
+    )
+    .set('Cookie', `MyCookie=${token}`)
+    .set({accept : 'multipart/form-data'})
+    expect(res.status).toEqual(200)
+    });
+    it('shouldnt fetch a user without auth', async () => {
+      const user = '6669bff1eaf98299bf9e6a99'
+      const token = 'authToken'
+      const res = await request(app)
+      .get(`/api/user/${user}`)
+      .set('Cookie', `MyCookie=${token}`)
+      expect(res.status).toEqual(401)
+      });
 });

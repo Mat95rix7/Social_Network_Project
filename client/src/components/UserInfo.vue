@@ -55,6 +55,7 @@
   }
   const onChange = (event) => {
       const file = event.target.files[0]
+      console.log(event.target.files)
       formData.append('image', file)
       previewImage = URL.createObjectURL(file)
     }
