@@ -41,6 +41,7 @@
     const updatePost = () => {
       myPost.post.message = contentInput
       formData.append('post', JSON.stringify(myPost.post))
+      // formData.append('message', contentInput.value)
       formData.append('role', role)
       postsStore.updatePost(idPost.value, formData)
       emit('close')

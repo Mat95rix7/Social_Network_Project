@@ -22,7 +22,9 @@ exports.getOnePost = (req, res, next) => {
 }
 
 exports.createPost = (req, res, next) => {
-    const postObject = JSON.parse(req.body.post)
+    console.log(req.body)
+    // const postObject = JSON.parse(req.body.post)
+    const postObject = req.body
     delete postObject.posterId
     const post = new Post({
         ...postObject,

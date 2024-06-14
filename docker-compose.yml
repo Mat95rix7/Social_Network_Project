@@ -9,12 +9,14 @@ services:
             - "5000:5000"
         depends_on:
             - mongo
-    client:
+    vite-app:
         container_name: myFront
         restart: always
         build: ./client
         ports:
-            - "80:5173"
+            - "5173:5173"
+        networks:
+            - default
         depends_on:
             - app
 

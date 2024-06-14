@@ -5,6 +5,11 @@
 
 /** @type {import('jest').Config} */
 const config = {
+  
+  testEnvironment: 'node',
+  setupFilesAfterEnv: ['./jest.setup.js'],
+  testTimeout: 30000,
+  
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 

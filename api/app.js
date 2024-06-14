@@ -16,7 +16,7 @@ const userRoutes = require('./routes/user.routes')
 
 
 
-connect_MongoDB()
+connect_MongoDB();
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*')

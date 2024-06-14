@@ -29,10 +29,7 @@
   const contentInput = ref('');
   let file
 
-  const post = {
-    posterId : userId,
-    message :''
-  }
+
 
   const onFileChange = (event) => {
       file = event.target.files[0]
@@ -44,8 +41,10 @@
       if (contentInput.value === ''){
         alert("Veuillez saisir un message")
       } else {
-        post.message = contentInput.value
-        formData.append('post', JSON.stringify(post))
+        // post.message = contentInput.value
+        formData.append('posterId', userId)
+        formData.append('message', contentInput.value)
+        // formData.append('post', JSON.stringify(post))
         if(file) {
           formData.append('image', file)
         }

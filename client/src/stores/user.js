@@ -99,6 +99,7 @@ export const useUsersStore = defineStore("users", {
           }
       })
       .then((res) => {
+        console.log(res)
         console.log("Déconnection réussie")
         sessionStorage.setItem('user','');
         document.cookie = 'MyCookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
