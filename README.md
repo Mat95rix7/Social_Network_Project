@@ -65,6 +65,14 @@ puis on lance le frond avec la commande :
             ```
 Accédez à http://localhost:5173/ dans votre navigateur pour accéder au serveur de développement.
 
+
+Pour lancer les test avec le framework Jest, utilisez la commande suivante :
+
+
+            ```bash
+            
+            npm test
+
 #### Utilisation
 
 **Options pour l'Admin :**
