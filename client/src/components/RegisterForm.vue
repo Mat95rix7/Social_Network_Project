@@ -10,14 +10,14 @@
             Close
           </span>
         </button>
-        <h2 class="text-green-500">Inscription</h2>
+        <h2 class="text-green-500">Registration</h2>
         <div class="form-group">
           <label for="username">Username</label>
           <input
             type="username"
             class="form-control"
             id="username"
-            placeholder="Votre username"
+            placeholder="Your username"
             v-model="username"
             @keyup="handleChange"
           />
@@ -28,7 +28,7 @@
             type="email"
             class="form-control"
             id="email"
-            placeholder="Votre email"
+            placeholder="Your email"
             v-model="email"
             @keyup="handleChange"
           />
@@ -38,7 +38,7 @@
           <input
             type="password"
             class="form-control"
-            placeholder="Votre mot de passe"
+            placeholder="Your password"
             v-model="password"
             @keyup="handleChange"
           />
@@ -48,12 +48,12 @@
           <input
             type="password"
             class="form-control"
-            placeholder="Votre mot de passe"
+            placeholder="Confirm your password"
             v-model="confirmPassword"
             @keyup="handleChange"
           />
         </div>
-        <input type="submit" value="Inscription" />
+        <input type="submit" value="Register" />
         <span class="error" v-if="error !== ''">{{ error }}</span>
       </form>
     </transition>

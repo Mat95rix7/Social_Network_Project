@@ -22,7 +22,7 @@
             <span type="email" class="bg-gray-400 text-black w-2/3 m-2 p-2 rounded-lg text-lg"> {{ email }}</span>
           </div>  
           <div class="flex m-2 bg-black rounded-lg">
-            <span class="text-green-500 w-1/3 m-2 p-2 text-lg">Post Likés :</span>
+            <span class="text-green-500 w-1/3 m-2 p-2 text-lg">Liked post :</span>
             <span class="bg-gray-400 text-black w-2/3 m-2 p-2 rounded-lg text-lg">{{currentUser.User.likes.length}}</span>
           </div>
           <button type="submit" class="mt-10 m-2 p-2 bg-green-500 text-white text-lg text-center rounded-lg">Save Changes</button>
@@ -55,7 +55,6 @@
   }
   const onChange = (event) => {
       const file = event.target.files[0]
-      console.log(event.target.files)
       formData.append('image', file)
       previewImage = URL.createObjectURL(file)
     }

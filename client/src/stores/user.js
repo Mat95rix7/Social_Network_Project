@@ -66,7 +66,7 @@ export const useUsersStore = defineStore("users", {
           responseAxios = res
           const data = res.data.user
           delete(data.password)
-          sessionStorage.setItem('user', JSON.stringify(data))
+          localStorage.setItem('user', JSON.stringify(data))
       })
       .catch(er => responseAxios = er.response)
       return responseAxios

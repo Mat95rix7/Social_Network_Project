@@ -22,7 +22,6 @@ exports.getOnePost = (req, res, next) => {
 }
 
 exports.createPost = (req, res, next) => {
-    console.log(req.body)
     // const postObject = JSON.parse(req.body.post)
     const postObject = req.body
     delete postObject.posterId

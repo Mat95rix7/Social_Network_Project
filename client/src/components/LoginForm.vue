@@ -12,7 +12,7 @@
             type="email"
             class="form-control"
             id="email"
-            placeholder="Votre email"
+            placeholder="Your email"
             v-model="email"
             @keyup="handleChange"
           />
@@ -22,14 +22,14 @@
           <input
             type="password"
             class="form-control"
-            placeholder="Votre mot de passe"
+            placeholder="Your password"
             v-model="password"
             @keyup="handleChange"
           />
         </div>
         <input type="submit" value="Connexion" />
-        <p class="text-white">Vous n'avez pas de compte ? 
-          <span class="text-green-500 cursor-pointer"  v-if="!showRegisterForm" @click="showFormReg()">Inscrivez-vous</span>
+        <p class="text-white">You have'nt an account ?
+          <span class="text-green-500 cursor-pointer"  v-if="!showRegisterForm" @click="showFormReg()">Sign Up</span>
           <RegisterForm :show-form="showRegisterForm"  @close="showFormReg"/>
         </p>
         <span class="error" v-if="error !== ''">{{ error }}</span>

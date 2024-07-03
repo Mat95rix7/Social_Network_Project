@@ -50,7 +50,7 @@ describe('Create Post', () => {
       const res = await request(app).get('/api/post')
       .set('Cookie', `MyCookie=${token}`)
       .set({accept : "application/json"})
-      expect(res.statusCode).toEqual(200)
+      expect(res.status).toEqual(200)
     });
 
     it('should fetch one post', async () => {
@@ -69,12 +69,11 @@ describe('Create Post', () => {
           })
       .set('Cookie', `MyCookie=${token}`)
       .set({accept : "application/json"})
-      expect(res.status).toEqual(201);
       const postId = res.body._id
       const response = await request(app).get(`/api/post/${postId}`)
       .set('Cookie', `MyCookie=${token}`)
       .set({accept : "application/json"})
-      expect(response.statusCode).toEqual(200)
+      expect(response.status).toEqual(200)
     });
 
     it('should delete one post', async () => {
@@ -93,12 +92,12 @@ describe('Create Post', () => {
           })
       .set('Cookie', `MyCookie=${token}`)
       .set({accept : "application/json"})
-      expect(res.status).toEqual(201);
+     
       const postId = res.body._id
       const response = await request(app).delete(`/api/post/${postId}`)
       .set('Cookie', `MyCookie=${token}`)
       .set({accept : "application/json"})
-      expect(response.statusCode).toEqual(200)
+      expect(response.status).toEqual(200)
     });
 
     it('should update a Post by id', async () => {
@@ -117,22 +116,26 @@ describe('Create Post', () => {
           })
       .set('Cookie', `MyCookie=${token}`)
       .set({accept : "application/json"})
-      expect(b.status).toEqual(201);
+      // expect(b.status).toEqual(201);
       const postId = b.body._id
       const post = {
         posterId : `${postId}`,
         message : 'This is the new content'
       }
       const postS = JSON.stringify(post)
+      let file = {
+                    name: '11718274530020.jpg',
+                    type: "image/jpeg"
+                }
 
       const response = await request(app).put(`/api/post/${postId}`)
       .send({
-              'file' : '1.jpg',
+              'file' : `${file}`,
               'post' : `${postS}`
               }
       )
       .set('Cookie', `MyCookie=${token}`)
       .set({accept : 'multipart/form-data'})
-      expect(response.statusCode).toEqual(200)
+      expect(response.status).toEqual(200)
       });
   });

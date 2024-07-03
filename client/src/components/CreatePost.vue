@@ -2,7 +2,7 @@
     <div class="w-9/12 bg-gray-700  px-2 mx-auto">
       <form @submit.prevent="createPost" class="flex-row w-full bg-gray-900 rounded-lg my-5 p-2">
         <textarea v-model="contentInput" type="text" name="newPost"
-            class="w-4/5 bg-gray-700 m-2 p-2 rounded-lg text-white min-h-48"
+            class="w-4/5 bg-gray-700 text-3xl m-5 p-5 rounded-lg text-white min-h-48"
             placeholder="Quoi de neuf ?"></textarea>
           <div class="flex flex-col w-1/5">
             <div class="h-1/2 flex justify-center content-center">
@@ -12,7 +12,7 @@
               </label>
               <input type="file" @change="onFileChange" id="image" accept="image/*" style="display: none;">
             </div>
-          <button type="submit" class="h-1/2 m-1 bg-green-500 text-white rounded-lg">Send</button>
+          <button type="submit" class="h-1/2 m-1 bg-green-500 text-white rounded-lg text-2xl">Send</button>
         </div>
       </form>
     </div>

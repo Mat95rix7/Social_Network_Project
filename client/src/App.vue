@@ -27,11 +27,10 @@
 
   let token, currentUser
   
-  if (document.cookie !=''){
+  if (document.cookie !==''){
     token = document.cookie.split('=')[1];
-    
-    const dataStringFromSessionStorage = sessionStorage.getItem('user');
-    currentUser = JSON.parse(dataStringFromSessionStorage);
+    const dataStringFromLocalStorage = localStorage.getItem('user');
+    currentUser = JSON.parse(dataStringFromLocalStorage);
     
     
     postsStore.setPosts()
